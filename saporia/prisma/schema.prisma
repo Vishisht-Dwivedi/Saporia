@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CUSTOMER
+  RESTAURANT
+  DELIVERY
+}
+
+enum OrderStatus {
+  PENDING_RESTAURANT
+  PENDING_DELIVERY
+  OUT_FOR_DELIVERY
+  DELIVERED
+  REJECTED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  role      Role
+
+  lat       Float
+  lng       Float
+
+  ordersPlaced   Order[] @relation("CustomerOrders")
+  deliveries     Order[] @relation("DeliveryOrders")
+
+  createdAt DateTime @default(now())
+}
+
+model Restaurant {
+  id        String   @id @default(cuid())
+  name      String
+
+  lat       Float
+  lng       Float
+
+  menuItems MenuItem[]
+  orders    Order[]
+
+  createdAt DateTime @default(now())
+}
+
+model MenuItem {
+  id           String @id @default(cuid())
+  name         String
+  price        Float
+
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+}
+
+model Order {
+  id              String      @id @default(cuid())
+
+  customer        User        @relation("CustomerOrders", fields: [customerId], references: [id])
+  customerId      String
+
+  restaurant      Restaurant  @relation(fields: [restaurantId], references: [id])
+  restaurantId    String
+
+  deliveryAgent   User?       @relation("DeliveryOrders", fields: [deliveryAgentId], references: [id])
+  deliveryAgentId String?
+
+  status          OrderStatus
+
+  totalPrice      Float
+  deliveryFee     Float
+
+  customerLat     Float
+  customerLng     Float
+
+  createdAt       DateTime @default(now())
+}
