@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output = "../generated"
 }
 
 datasource db {
@@ -24,7 +25,7 @@ model User {
   id        String   @id @default(cuid())
   name      String
   role      Role
-
+  password  String
   lat       Float
   lng       Float
 
