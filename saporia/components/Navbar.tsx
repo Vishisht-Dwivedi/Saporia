@@ -8,7 +8,7 @@ interface NavbarProps {
 
 export default function Navbar({ user, onLogout }: NavbarProps) {
   return (
-    <nav className="bg-white shadow sticky top-0 z-10">
+    <nav className="bg-white shadow sticky top-0 z-[99999]">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold text-red-500">
           Saporia

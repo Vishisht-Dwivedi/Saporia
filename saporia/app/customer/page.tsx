@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { toast } from "react-hot-toast"
 import Card from "@/components/Card"
 import Button from "@/components/Button"
 import Navbar from "@/components/Navbar"
+import Map from "@/components/Map"
 
 export default function CustomerPage() {
   const [restaurants, setRestaurants] = useState<any[]>([])
@@ -124,14 +125,14 @@ export default function CustomerPage() {
     if (user?.id) loadOrders()
   }, [user])
 
-  const loadMenu = async (restaurant: any) => {
+  const loadMenu = useCallback(async (restaurant: any) => {
     setSelectedRestaurant(restaurant)
     const res = await fetch(`/api/restaurants/${restaurant.id}/menu`)
     const data = await res.json()
     setMenu(data)
     setMenuOpen(true)
     toast.success(`Loaded menu for ${restaurant.name}`)
-  }
+  }, [])
 
   const quickAdd = async (restaurant: any) => {
     try {
@@ -236,6 +237,9 @@ export default function CustomerPage() {
       <Navbar user={user} />
       <main className="max-w-5xl mx-auto px-4 py-8">
         <h2 className="text-3xl font-extrabold mb-4 text-[#e23744] tracking-tight">Restaurants</h2>
+        {/* Map showing restaurants and user */}
+        <Map restaurants={restaurants} user={user} onRestaurantClick={loadMenu} />
+
         <div className="flex flex-wrap gap-6">
           {restaurants.map(r => (
             <Card key={r.id} className="w-72 border-[#e23744] border-opacity-20 hover:shadow-lg transition-shadow">
