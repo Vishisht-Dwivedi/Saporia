@@ -3,6 +3,24 @@ generator client {
   output = "../generated"
 }
 
+model Feedback {
+  id        String   @id @default(cuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String   @unique
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
 datasource db {
   provider = "postgresql"
 }
@@ -31,6 +49,8 @@ model User {
 
   ordersPlaced   Order[] @relation("CustomerOrders")
   deliveries     Order[] @relation("DeliveryOrders")
+  notifications  Notification[]
+  restaurants    Restaurant[]
 
   createdAt DateTime @default(now())
 }
@@ -38,6 +58,8 @@ model User {
 model Restaurant {
   id        String   @id @default(cuid())
   name      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
 
   lat       Float
   lng       Float
@@ -76,6 +98,8 @@ model Order {
 
   customerLat     Float
   customerLng     Float
+
+  feedback        Feedback?
 
   createdAt       DateTime @default(now())
 }

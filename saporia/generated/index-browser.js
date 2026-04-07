@@ -120,6 +120,22 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.FeedbackScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  message: 'message',
+  read: 'read',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -133,6 +149,7 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.RestaurantScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  userId: 'userId',
   lat: 'lat',
   lng: 'lng',
   createdAt: 'createdAt'
@@ -187,6 +204,8 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
 };
 
 exports.Prisma.ModelName = {
+  Feedback: 'Feedback',
+  Notification: 'Notification',
   User: 'User',
   Restaurant: 'Restaurant',
   MenuItem: 'MenuItem',

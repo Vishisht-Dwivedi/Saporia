@@ -1,36 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
-
-const cardStyle = {
-  background: '#fff',
-  borderRadius: 8,
-  boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
-  padding: 16,
-  marginBottom: 16,
-  maxWidth: 400
-}
-const buttonStyle = {
-  background: '#2d8f4e',
-  color: '#fff',
-  border: 'none',
-  borderRadius: 4,
-  padding: '8px 16px',
-  cursor: 'pointer',
-  marginTop: 8
-}
-const sectionTitle = {
-  fontWeight: 600,
-  fontSize: 20,
-  margin: '24px 0 12px 0'
-}
-const orderStyle = {
-  background: '#f6f6f6',
-  borderRadius: 6,
-  padding: 10,
-  marginBottom: 8,
-  fontSize: 15
-}
+import { useEffect, useState, useRef } from "react"
+import { toast } from "react-hot-toast"
+import Card from "@/components/Card"
+import Button from "@/components/Button"
+import Navbar from "@/components/Navbar"
 
 export default function CustomerPage() {
   const [restaurants, setRestaurants] = useState<any[]>([])
@@ -38,6 +12,75 @@ export default function CustomerPage() {
   const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null)
   const [orders, setOrders] = useState<any[]>([])
   const [user, setUser] = useState<any>(null)
+  const wsRef = useRef<WebSocket | null>(null)
+  const [feedbackOrder, setFeedbackOrder] = useState<any>(null)
+  const [feedback, setFeedback] = useState({ rating: 5, comment: "" })
+
+  // WebSocket for live order status
+  useEffect(() => {
+    if (!user?.id) return
+    const url = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/api/orders/ws?userId=${user.id}&role=${user.role}`
+    let ws: WebSocket | null = null
+    let opened = false
+    try {
+      ws = new WebSocket(url)
+      const openTimer = setTimeout(() => {
+        if (!opened) {
+          console.warn('[customer] WS not opened, falling back to polling')
+          loadOrders()
+          const iv = setInterval(loadOrders, 3000)
+          // store interval in ref via wsRef to clear on cleanup
+          // @ts-ignore
+          wsRef.current = { iv }
+        }
+      }, 2000)
+
+      ws.onopen = () => { opened = true; clearTimeout(openTimer); }
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data)
+        if (data.type === "order:assigned") {
+          toast.success("Your order is out for delivery!")
+          loadOrders()
+        }
+        if (data.type === "order:delivered") {
+          toast.success("Order delivered! Please provide feedback.")
+          setFeedbackOrder(data.orderId)
+          loadOrders()
+        }
+      }
+      wsRef.current = ws
+    } catch (err) {
+      console.warn('[customer] WS creation failed, starting polling', err)
+      loadOrders()
+      const iv = setInterval(loadOrders, 3000)
+      // @ts-ignore
+      wsRef.current = { iv }
+    }
+    return () => {
+      try { if (ws && ws.readyState === 1) ws.close() } catch (e) {}
+      // clear polling interval if any
+      // @ts-ignore
+      if (wsRef.current?.iv) clearInterval(wsRef.current.iv)
+    }
+  }, [user])
+
+  // Submit feedback
+  const submitFeedback = async () => {
+    if (!feedbackOrder) return
+    await fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId: feedbackOrder,
+        rating: feedback.rating,
+        comment: feedback.comment
+      })
+    })
+    setFeedbackOrder(null)
+    setFeedback({ rating: 5, comment: "" })
+    toast.success("Thank you for your feedback!")
+  }
 
   useEffect(() => {
     const u = localStorage.getItem("user")
@@ -71,7 +114,14 @@ export default function CustomerPage() {
   const placeOrder = async () => {
     if (!user?.id || !selectedRestaurant) return
     const totalPrice = menu.reduce((sum, item) => sum + item.price, 0)
-    await fetch("/api/orders", {
+    console.log("Placing order with details: ", {
+      customerId: user.id,
+      restaurantId: selectedRestaurant.id,
+      totalPrice,
+      customerLat: user.lat,
+      customerLng: user.lng
+    });
+    const res = await fetch("/api/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -81,55 +131,85 @@ export default function CustomerPage() {
         customerLat: user.lat,
         customerLng: user.lng
       })
-    })
+    });
+    console.log(res);
     loadOrders()
   }
 
   return (
-    <div style={{ background: '#f3f4f6', minHeight: '100vh', padding: 0 }}>
-      <div style={{ background: '#2d8f4e', color: '#fff', padding: 20, fontSize: 28, fontWeight: 700, letterSpacing: 1, marginBottom: 24 }}>Saporia - Customer</div>
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: 20 }}>
-        <div style={sectionTitle}>Restaurants</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+    <div className="bg-[#fff8f6] min-h-screen font-sans">
+      <Navbar user={user} />
+      <main className="max-w-5xl mx-auto px-4 py-8">
+        <h2 className="text-3xl font-extrabold mb-4 text-[#e23744] tracking-tight">Restaurants</h2>
+        <div className="flex flex-wrap gap-6">
           {restaurants.map(r => (
-            <div key={r.id} style={cardStyle}>
-              <div style={{ fontWeight: 600, fontSize: 18 }}>{r.name}</div>
-              <button style={buttonStyle} onClick={() => loadMenu(r)}>View Menu</button>
-            </div>
+            <Card key={r.id} className="w-72 border-[#e23744] border-opacity-20 hover:shadow-lg transition-shadow">
+              <div className="font-semibold text-lg mb-2 text-[#e23744]">{r.name}</div>
+              <Button onClick={() => loadMenu(r)} className="w-full mt-2 bg-[#e23744] hover:bg-[#b71c2b]">View Menu</Button>
+            </Card>
           ))}
         </div>
 
         {selectedRestaurant && (
-          <div style={{ marginTop: 32 }}>
-            <div style={sectionTitle}>Menu ({selectedRestaurant.name})</div>
-            <div style={{ ...cardStyle, maxWidth: 500 }}>
-              {menu.length === 0 && <div>No items available.</div>}
+          <section className="mt-10">
+            <h3 className="text-2xl font-semibold mb-3 text-[#e23744]">Menu ({selectedRestaurant.name})</h3>
+            <Card className="max-w-xl border-[#e23744] border-opacity-20">
+              {menu.length === 0 && <div className="text-gray-500">No items available.</div>}
               {menu.map(item => (
-                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                <div key={item.id} className="flex justify-between mb-2">
                   <span>{item.name}</span>
-                  <span style={{ fontWeight: 500 }}>₹{item.price}</span>
+                  <span className="font-medium text-[#e23744]">₹{item.price}</span>
                 </div>
               ))}
               {menu.length > 0 && (
-                <button style={{ ...buttonStyle, width: '100%' }} onClick={placeOrder}>Place Order</button>
+                <Button onClick={placeOrder} className="w-full mt-4 bg-[#e23744] hover:bg-[#b71c2b]">Place Order</Button>
               )}
+            </Card>
+          </section>
+        )}
+
+        <h2 className="text-3xl font-extrabold mt-10 mb-4 text-[#e23744] tracking-tight">Your Orders</h2>
+        <div>
+          {orders.length === 0 && <div className="text-gray-400">No orders yet.</div>}
+          {orders.map(o => (
+            <Card key={o.id} className="bg-[#fff0ee] border-[#e23744] border-opacity-10">
+              <div className="mb-1"><b>Order:</b> {o.id}</div>
+              <div className="mb-1"><b>Status:</b> <span className="text-[#e23744] font-semibold">{o.status.replace(/_/g, ' ')}</span></div>
+              <div className="mb-1"><b>Restaurant:</b> {o.restaurant?.name || o.restaurantId}</div>
+              <div className="mb-1"><b>Total:</b> <span className="text-[#e23744] font-semibold">₹{o.totalPrice}</span></div>
+            </Card>
+          ))}
+        </div>
+
+        {/* Feedback Modal */}
+        {feedbackOrder && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-8 shadow-lg max-w-md w-full">
+              <h3 className="text-xl font-bold mb-4 text-[#e23744]">Rate Your Order</h3>
+              <div className="flex items-center mb-4">
+                {[1,2,3,4,5].map(star => (
+                  <button
+                    key={star}
+                    className={`text-2xl mr-1 ${feedback.rating >= star ? 'text-[#e23744]' : 'text-gray-300'}`}
+                    onClick={() => setFeedback(f => ({ ...f, rating: star }))}
+                  >★</button>
+                ))}
+              </div>
+              <textarea
+                className="w-full border rounded p-2 mb-4"
+                rows={3}
+                placeholder="Leave a comment (optional)"
+                value={feedback.comment}
+                onChange={e => setFeedback(f => ({ ...f, comment: e.target.value }))}
+              />
+              <div className="flex justify-end gap-2">
+                <Button onClick={() => setFeedbackOrder(null)} variant="secondary">Cancel</Button>
+                <Button onClick={submitFeedback} className="bg-[#e23744] hover:bg-[#b71c2b]">Submit</Button>
+              </div>
             </div>
           </div>
         )}
-
-        <div style={sectionTitle}>Your Orders</div>
-        <div>
-          {orders.length === 0 && <div style={{ color: '#888' }}>No orders yet.</div>}
-          {orders.map(o => (
-            <div key={o.id} style={orderStyle}>
-              <div><b>Order:</b> {o.id}</div>
-              <div><b>Status:</b> {o.status}</div>
-              <div><b>Restaurant:</b> {o.restaurant?.name || o.restaurantId}</div>
-              <div><b>Total:</b> ₹{o.totalPrice}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+      </main>
     </div>
   )
 }

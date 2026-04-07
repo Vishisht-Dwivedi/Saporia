@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       return Response.json({ error: "Invalid password" }, { status: 401 })
     }
     const token = signToken({ id: user.id, name: user.name, role: user.role })
-    const response = Response.json({ user: { id: user.id, name: user.name, role: user.role } })
+    const response = Response.json({ user })
     response.headers.set('Set-Cookie', `token=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=604800`)
     return response
 }
