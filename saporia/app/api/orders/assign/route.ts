@@ -5,6 +5,19 @@ export async function POST(req: Request) {
   const { orderId, deliveryAgentId } = await req.json()
   console.log('[POST /api/orders/assign] Assigning order', orderId, 'to', deliveryAgentId)
 
+  // Ensure agent is not currently carrying an OUT_FOR_DELIVERY package
+  const orderToAssign = await prisma.order.findUnique({ where: { id: orderId } })
+  if (!orderToAssign) {
+    console.log('[POST /api/orders/assign] Order not found', orderId)
+    return Response.json({ error: 'Order not found' }, { status: 404 })
+  }
+  const active = await prisma.order.findMany({ where: { deliveryAgentId, status: 'OUT_FOR_DELIVERY' } })
+  const activeRestaurantIds = Array.from(new Set(active.map(a => a.restaurantId)))
+  if (activeRestaurantIds.length > 0 && !(activeRestaurantIds.length === 1 && activeRestaurantIds[0] === orderToAssign.restaurantId)) {
+    console.log('[POST /api/orders/assign] Agent', deliveryAgentId, 'is already delivering for other restaurant(s)', activeRestaurantIds)
+    return Response.json({ error: 'Agent is already delivering for another restaurant' }, { status: 409 })
+  }
+
   const order = await prisma.order.update({
     where: { id: orderId },
     data: {

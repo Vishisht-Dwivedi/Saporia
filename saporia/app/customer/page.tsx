@@ -12,6 +12,9 @@ export default function CustomerPage() {
   const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<any>(null)
+  const [cart, setCart] = useState<Array<any>>([])
+  const [cartOpen, setCartOpen] = useState(false)
+  const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [orders, setOrders] = useState<any[]>([])
   const [user, setUser] = useState<any>(null)
   const wsRef = useRef<WebSocket | null>(null)
@@ -84,6 +87,21 @@ export default function CustomerPage() {
     toast.success("Thank you for your feedback!")
   }
 
+  const markReceived = async (orderId: string) => {
+    try {
+      const res = await fetch(`/api/orders/${orderId}`, { method: 'PATCH' })
+      if (!res.ok) {
+        toast.error('Failed to mark received')
+        return
+      }
+      toast.success('Marked as received')
+      loadOrders()
+    } catch (e) {
+      console.error(e)
+      toast.error('Network error')
+    }
+  }
+
   useEffect(() => {
     const u = localStorage.getItem("user")
     if (u) setUser(JSON.parse(u))
@@ -114,15 +132,29 @@ export default function CustomerPage() {
     setMenuOpen(true)
     toast.success(`Loaded menu for ${restaurant.name}`)
   }
-  const placeOrder = async (item: any) => {
-    if (!user?.id || !selectedRestaurant || !item) return
+
+  const quickAdd = async (restaurant: any) => {
+    try {
+      const res = await fetch(`/api/restaurants/${restaurant.id}/menu`)
+      const data = await res.json()
+      if (!data || data.length === 0) return toast.error('No items to add')
+      addToCart(data[0], restaurant)
+    } catch (e) {
+      console.error(e)
+      toast.error('Could not load menu')
+    }
+  }
+  // placeOrder can be used for immediate order or during checkout
+  const placeOrder = async (item: any, restaurantParam?: any) => {
+    const restaurant = restaurantParam || selectedRestaurant
+    if (!user?.id || !restaurant || !item) return null
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerId: user.id,
-          restaurantId: selectedRestaurant.id,
+          restaurantId: restaurant.id,
           menuItemId: item.id,
           customerLat: user.lat,
           customerLng: user.lng
@@ -131,16 +163,71 @@ export default function CustomerPage() {
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: res.status }))
         toast.error("Failed to place order: " + (err.error || err.message || res.status))
-        return
+        return null
       }
       const order = await res.json()
       toast.success(`Ordered ${order.menuItemName} — ₹${order.menuItemPrice} (+ ₹${order.deliveryFee?.toFixed(2) || 0} delivery)`)
-      setMenuOpen(false)
-      setSelectedItem(null)
       loadOrders()
+      return order
     } catch (e) {
       console.error(e)
       toast.error("Network error placing order")
+      return null
+    }
+  }
+
+  const addToCart = (item: any, restaurant: any) => {
+    setCart(prev => {
+      const idx = prev.findIndex(ci => ci.menuItemId === item.id)
+      if (idx !== -1) {
+        const copy = [...prev]
+        copy[idx].qty += 1
+        return copy
+      }
+      return [...prev, { menuItemId: item.id, name: item.name, price: item.price, restaurantId: restaurant.id, restaurantName: restaurant.name, qty: 1 }]
+    })
+    toast.success(`${item.name} added to cart`)
+  }
+
+  const removeFromCart = (menuItemId: string) => {
+    setCart(prev => prev.filter(ci => ci.menuItemId !== menuItemId))
+  }
+
+  const changeQty = (menuItemId: string, delta: number) => {
+    setCart(prev => prev.map(ci => ci.menuItemId === menuItemId ? { ...ci, qty: Math.max(1, ci.qty + delta) } : ci))
+  }
+
+  const checkout = async () => {
+    if (!cart.length) return toast.error("Cart is empty")
+    setIsCheckingOut(true)
+    // Group cart items by restaurant
+    const groups: Record<string, any> = {}
+    cart.forEach(ci => {
+      if (!groups[ci.restaurantId]) groups[ci.restaurantId] = { restaurantId: ci.restaurantId, restaurantName: ci.restaurantName, items: [] }
+      groups[ci.restaurantId].items.push(ci)
+    })
+    try {
+      for (const gid of Object.keys(groups)) {
+        const group = groups[gid]
+        // process items one by one for this restaurant
+        for (const ci of group.items) {
+          for (let i = 0; i < ci.qty; i++) {
+            // find restaurant object in restaurants list to pass to placeOrder
+            const rest = restaurants.find(r => r.id === ci.restaurantId)
+            await placeOrder({ id: ci.menuItemId }, rest)
+            // slight delay to avoid overwhelming (optional)
+            await new Promise(res => setTimeout(res, 200))
+          }
+        }
+      }
+      toast.success('Checkout complete — orders created')
+      setCart([])
+      setCartOpen(false)
+    } catch (e) {
+      console.error(e)
+      toast.error('Checkout failed')
+    } finally {
+      setIsCheckingOut(false)
     }
   }
 
@@ -153,9 +240,18 @@ export default function CustomerPage() {
           {restaurants.map(r => (
             <Card key={r.id} className="w-72 border-[#e23744] border-opacity-20 hover:shadow-lg transition-shadow">
               <div className="font-semibold text-lg mb-2 text-[#e23744]">{r.name}</div>
-              <Button onClick={() => loadMenu(r)} className="w-full mt-2 bg-[#e23744] hover:bg-[#b71c2b]">View Menu</Button>
+              <div className="flex gap-2">
+                <Button onClick={() => loadMenu(r)} className="flex-1 mt-2 bg-[#e23744] hover:bg-[#b71c2b]">View Menu</Button>
+              </div>
             </Card>
           ))}
+        </div>
+
+        {/* Floating Cart Button */}
+        <div className="fixed right-6 top-24 z-40">
+          <button onClick={() => setCartOpen(true)} className="bg-[#e23744] text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-3">
+            Cart ({cart.reduce((s, c) => s + c.qty, 0)})
+          </button>
         </div>
 
         {/* Menu modal (opened via View Menu) */}
@@ -175,10 +271,58 @@ export default function CustomerPage() {
                       <div className="text-sm text-gray-500">₹{item.price}</div>
                     </div>
                     <div className="flex items-center gap-2">
+                      <Button onClick={() => addToCart(item, selectedRestaurant)} className="bg-[#f59e9e] hover:bg-[#f07b7b]">Add to cart</Button>
                       <Button onClick={() => { setSelectedItem(item); placeOrder(item) }} className="bg-[#e23744] hover:bg-[#b71c2b]">Order</Button>
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Cart modal */}
+        {cartOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 shadow-lg max-w-2xl w-full">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-2xl font-semibold text-[#e23744]">Your Cart</h3>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => setCartOpen(false)} className="text-gray-500">Close</button>
+                </div>
+              </div>
+              <div className="space-y-3 max-h-[50vh] overflow-auto">
+                {cart.length === 0 && <div className="text-gray-500">Cart is empty</div>}
+                {cart.length > 0 && (
+                  Object.values(cart.reduce((acc: any, ci: any) => {
+                    if (!acc[ci.restaurantId]) acc[ci.restaurantId] = { restaurantName: ci.restaurantName, items: [] }
+                    acc[ci.restaurantId].items.push(ci)
+                    return acc
+                  }, {})).map((grp: any) => (
+                    <div key={grp.restaurantName} className="border p-3 rounded">
+                      <div className="font-semibold mb-2">{grp.restaurantName}</div>
+                      {grp.items.map((ci: any) => (
+                        <div key={ci.menuItemId} className="flex justify-between items-center py-2">
+                          <div>
+                            <div className="font-medium">{ci.name}</div>
+                            <div className="text-sm text-gray-500">₹{ci.price}</div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button onClick={() => changeQty(ci.menuItemId, -1)} className="px-2">-</button>
+                            <div>{ci.qty}</div>
+                            <button onClick={() => changeQty(ci.menuItemId, 1)} className="px-2">+</button>
+                            <button onClick={() => removeFromCart(ci.menuItemId)} className="text-red-500 ml-2">Remove</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )))
+                }
+              </div>
+              <div className="mt-4 flex justify-end items-center gap-3">
+                <div className="mr-auto font-medium">Total: ₹{cart.reduce((s, c) => s + c.price * c.qty, 0).toFixed(2)}</div>
+                <Button variant="secondary" onClick={() => { setCart([]); setCartOpen(false) }}>Clear</Button>
+                <Button onClick={checkout} className="bg-[#e23744] hover:bg-[#b71c2b]" disabled={isCheckingOut}>{isCheckingOut ? 'Processing...' : 'Checkout'}</Button>
               </div>
             </div>
           </div>
@@ -195,6 +339,11 @@ export default function CustomerPage() {
               <div className="mb-1"><b>Item:</b> {o.menuItemName || '—'} {o.menuItemPrice != null && (<span className="text-[#e23744] font-semibold">₹{o.menuItemPrice}</span>)}</div>
               <div className="mb-1"><b>Delivery Fee:</b> <span className="text-[#e23744] font-semibold">₹{o.deliveryFee?.toFixed(2) || '0.00'}</span></div>
               <div className="mb-1"><b>Total:</b> <span className="text-[#e23744] font-semibold">₹{o.totalPrice}</span></div>
+              {o.status === 'OUT_FOR_DELIVERY' && (
+                <div className="mt-2">
+                  <Button onClick={() => markReceived(o.id)} className="bg-green-600 hover:bg-green-700">Confirm Received</Button>
+                </div>
+              )}
             </Card>
           ))}
         </div>
