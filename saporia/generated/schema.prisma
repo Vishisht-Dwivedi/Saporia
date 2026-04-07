@@ -96,8 +96,11 @@ model Order {
   totalPrice  Float
   deliveryFee Float
 
-  customerLat Float
-  customerLng Float
+  customerLat   Float
+  customerLng   Float
+  menuItemId    String?
+  menuItemName  String?
+  menuItemPrice Float?
 
   feedback Feedback?
 

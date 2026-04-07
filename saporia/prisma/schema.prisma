@@ -98,6 +98,9 @@ model Order {
 
   customerLat     Float
   customerLng     Float
+  menuItemId      String?
+  menuItemName    String?
+  menuItemPrice   Float?
 
   feedback        Feedback?
 

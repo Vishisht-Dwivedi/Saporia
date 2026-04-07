@@ -10,6 +10,8 @@ export default function CustomerPage() {
   const [restaurants, setRestaurants] = useState<any[]>([])
   const [menu, setMenu] = useState<any[]>([])
   const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<any>(null)
   const [orders, setOrders] = useState<any[]>([])
   const [user, setUser] = useState<any>(null)
   const wsRef = useRef<WebSocket | null>(null)
@@ -109,31 +111,37 @@ export default function CustomerPage() {
     const res = await fetch(`/api/restaurants/${restaurant.id}/menu`)
     const data = await res.json()
     setMenu(data)
+    setMenuOpen(true)
+    toast.success(`Loaded menu for ${restaurant.name}`)
   }
-
-  const placeOrder = async () => {
-    if (!user?.id || !selectedRestaurant) return
-    const totalPrice = menu.reduce((sum, item) => sum + item.price, 0)
-    console.log("Placing order with details: ", {
-      customerId: user.id,
-      restaurantId: selectedRestaurant.id,
-      totalPrice,
-      customerLat: user.lat,
-      customerLng: user.lng
-    });
-    const res = await fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        customerId: user.id,
-        restaurantId: selectedRestaurant.id,
-        totalPrice,
-        customerLat: user.lat,
-        customerLng: user.lng
+  const placeOrder = async (item: any) => {
+    if (!user?.id || !selectedRestaurant || !item) return
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerId: user.id,
+          restaurantId: selectedRestaurant.id,
+          menuItemId: item.id,
+          customerLat: user.lat,
+          customerLng: user.lng
+        })
       })
-    });
-    console.log(res);
-    loadOrders()
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.status }))
+        toast.error("Failed to place order: " + (err.error || err.message || res.status))
+        return
+      }
+      const order = await res.json()
+      toast.success(`Ordered ${order.menuItemName} — ₹${order.menuItemPrice} (+ ₹${order.deliveryFee?.toFixed(2) || 0} delivery)`)
+      setMenuOpen(false)
+      setSelectedItem(null)
+      loadOrders()
+    } catch (e) {
+      console.error(e)
+      toast.error("Network error placing order")
+    }
   }
 
   return (
@@ -150,22 +158,30 @@ export default function CustomerPage() {
           ))}
         </div>
 
-        {selectedRestaurant && (
-          <section className="mt-10">
-            <h3 className="text-2xl font-semibold mb-3 text-[#e23744]">Menu ({selectedRestaurant.name})</h3>
-            <Card className="max-w-xl border-[#e23744] border-opacity-20">
-              {menu.length === 0 && <div className="text-gray-500">No items available.</div>}
-              {menu.map(item => (
-                <div key={item.id} className="flex justify-between mb-2">
-                  <span>{item.name}</span>
-                  <span className="font-medium text-[#e23744]">₹{item.price}</span>
-                </div>
-              ))}
-              {menu.length > 0 && (
-                <Button onClick={placeOrder} className="w-full mt-4 bg-[#e23744] hover:bg-[#b71c2b]">Place Order</Button>
-              )}
-            </Card>
-          </section>
+        {/* Menu modal (opened via View Menu) */}
+        {menuOpen && selectedRestaurant && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 shadow-lg max-w-2xl w-full">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-2xl font-semibold text-[#e23744]">Menu — {selectedRestaurant.name}</h3>
+                <button onClick={() => setMenuOpen(false)} className="text-gray-500">Close</button>
+              </div>
+              <div className="space-y-3 max-h-[50vh] overflow-auto">
+                {menu.length === 0 && <div className="text-gray-500">No items available.</div>}
+                {menu.map(item => (
+                  <div key={item.id} className="flex justify-between items-center border-b py-2">
+                    <div>
+                      <div className="font-medium">{item.name}</div>
+                      <div className="text-sm text-gray-500">₹{item.price}</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button onClick={() => { setSelectedItem(item); placeOrder(item) }} className="bg-[#e23744] hover:bg-[#b71c2b]">Order</Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
 
         <h2 className="text-3xl font-extrabold mt-10 mb-4 text-[#e23744] tracking-tight">Your Orders</h2>
@@ -176,6 +192,8 @@ export default function CustomerPage() {
               <div className="mb-1"><b>Order:</b> {o.id}</div>
               <div className="mb-1"><b>Status:</b> <span className="text-[#e23744] font-semibold">{o.status.replace(/_/g, ' ')}</span></div>
               <div className="mb-1"><b>Restaurant:</b> {o.restaurant?.name || o.restaurantId}</div>
+              <div className="mb-1"><b>Item:</b> {o.menuItemName || '—'} {o.menuItemPrice != null && (<span className="text-[#e23744] font-semibold">₹{o.menuItemPrice}</span>)}</div>
+              <div className="mb-1"><b>Delivery Fee:</b> <span className="text-[#e23744] font-semibold">₹{o.deliveryFee?.toFixed(2) || '0.00'}</span></div>
               <div className="mb-1"><b>Total:</b> <span className="text-[#e23744] font-semibold">₹{o.totalPrice}</span></div>
             </Card>
           ))}

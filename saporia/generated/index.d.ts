@@ -7107,6 +7107,7 @@ export namespace Prisma {
     deliveryFee: number | null
     customerLat: number | null
     customerLng: number | null
+    menuItemPrice: number | null
   }
 
   export type OrderSumAggregateOutputType = {
@@ -7114,6 +7115,7 @@ export namespace Prisma {
     deliveryFee: number | null
     customerLat: number | null
     customerLng: number | null
+    menuItemPrice: number | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -7126,6 +7128,9 @@ export namespace Prisma {
     deliveryFee: number | null
     customerLat: number | null
     customerLng: number | null
+    menuItemId: string | null
+    menuItemName: string | null
+    menuItemPrice: number | null
     createdAt: Date | null
   }
 
@@ -7139,6 +7144,9 @@ export namespace Prisma {
     deliveryFee: number | null
     customerLat: number | null
     customerLng: number | null
+    menuItemId: string | null
+    menuItemName: string | null
+    menuItemPrice: number | null
     createdAt: Date | null
   }
 
@@ -7152,6 +7160,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId: number
+    menuItemName: number
+    menuItemPrice: number
     createdAt: number
     _all: number
   }
@@ -7162,6 +7173,7 @@ export namespace Prisma {
     deliveryFee?: true
     customerLat?: true
     customerLng?: true
+    menuItemPrice?: true
   }
 
   export type OrderSumAggregateInputType = {
@@ -7169,6 +7181,7 @@ export namespace Prisma {
     deliveryFee?: true
     customerLat?: true
     customerLng?: true
+    menuItemPrice?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -7181,6 +7194,9 @@ export namespace Prisma {
     deliveryFee?: true
     customerLat?: true
     customerLng?: true
+    menuItemId?: true
+    menuItemName?: true
+    menuItemPrice?: true
     createdAt?: true
   }
 
@@ -7194,6 +7210,9 @@ export namespace Prisma {
     deliveryFee?: true
     customerLat?: true
     customerLng?: true
+    menuItemId?: true
+    menuItemName?: true
+    menuItemPrice?: true
     createdAt?: true
   }
 
@@ -7207,6 +7226,9 @@ export namespace Prisma {
     deliveryFee?: true
     customerLat?: true
     customerLng?: true
+    menuItemId?: true
+    menuItemName?: true
+    menuItemPrice?: true
     createdAt?: true
     _all?: true
   }
@@ -7307,6 +7329,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId: string | null
+    menuItemName: string | null
+    menuItemPrice: number | null
     createdAt: Date
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
@@ -7339,6 +7364,9 @@ export namespace Prisma {
     deliveryFee?: boolean
     customerLat?: boolean
     customerLng?: boolean
+    menuItemId?: boolean
+    menuItemName?: boolean
+    menuItemPrice?: boolean
     createdAt?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
@@ -7356,6 +7384,9 @@ export namespace Prisma {
     deliveryFee?: boolean
     customerLat?: boolean
     customerLng?: boolean
+    menuItemId?: boolean
+    menuItemName?: boolean
+    menuItemPrice?: boolean
     createdAt?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
@@ -7372,6 +7403,9 @@ export namespace Prisma {
     deliveryFee?: boolean
     customerLat?: boolean
     customerLng?: boolean
+    menuItemId?: boolean
+    menuItemName?: boolean
+    menuItemPrice?: boolean
     createdAt?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
@@ -7388,10 +7422,13 @@ export namespace Prisma {
     deliveryFee?: boolean
     customerLat?: boolean
     customerLng?: boolean
+    menuItemId?: boolean
+    menuItemName?: boolean
+    menuItemPrice?: boolean
     createdAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "restaurantId" | "deliveryAgentId" | "status" | "totalPrice" | "deliveryFee" | "customerLat" | "customerLng" | "createdAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "restaurantId" | "deliveryAgentId" | "status" | "totalPrice" | "deliveryFee" | "customerLat" | "customerLng" | "menuItemId" | "menuItemName" | "menuItemPrice" | "createdAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | UserDefaultArgs<ExtArgs>
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
@@ -7427,6 +7464,9 @@ export namespace Prisma {
       deliveryFee: number
       customerLat: number
       customerLng: number
+      menuItemId: string | null
+      menuItemName: string | null
+      menuItemPrice: number | null
       createdAt: Date
     }, ExtArgs["result"]["order"]>
     composites: {}
@@ -7864,6 +7904,9 @@ export namespace Prisma {
     readonly deliveryFee: FieldRef<"Order", 'Float'>
     readonly customerLat: FieldRef<"Order", 'Float'>
     readonly customerLng: FieldRef<"Order", 'Float'>
+    readonly menuItemId: FieldRef<"Order", 'String'>
+    readonly menuItemName: FieldRef<"Order", 'String'>
+    readonly menuItemPrice: FieldRef<"Order", 'Float'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
   }
     
@@ -8403,6 +8446,9 @@ export namespace Prisma {
     deliveryFee: 'deliveryFee',
     customerLat: 'customerLat',
     customerLng: 'customerLng',
+    menuItemId: 'menuItemId',
+    menuItemName: 'menuItemName',
+    menuItemPrice: 'menuItemPrice',
     createdAt: 'createdAt'
   };
 
@@ -8853,6 +8899,9 @@ export namespace Prisma {
     deliveryFee?: FloatFilter<"Order"> | number
     customerLat?: FloatFilter<"Order"> | number
     customerLng?: FloatFilter<"Order"> | number
+    menuItemId?: StringNullableFilter<"Order"> | string | null
+    menuItemName?: StringNullableFilter<"Order"> | string | null
+    menuItemPrice?: FloatNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     customer?: XOR<UserScalarRelationFilter, UserWhereInput>
     restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
@@ -8870,6 +8919,9 @@ export namespace Prisma {
     deliveryFee?: SortOrder
     customerLat?: SortOrder
     customerLng?: SortOrder
+    menuItemId?: SortOrderInput | SortOrder
+    menuItemName?: SortOrderInput | SortOrder
+    menuItemPrice?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     customer?: UserOrderByWithRelationInput
     restaurant?: RestaurantOrderByWithRelationInput
@@ -8890,6 +8942,9 @@ export namespace Prisma {
     deliveryFee?: FloatFilter<"Order"> | number
     customerLat?: FloatFilter<"Order"> | number
     customerLng?: FloatFilter<"Order"> | number
+    menuItemId?: StringNullableFilter<"Order"> | string | null
+    menuItemName?: StringNullableFilter<"Order"> | string | null
+    menuItemPrice?: FloatNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     customer?: XOR<UserScalarRelationFilter, UserWhereInput>
     restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
@@ -8907,6 +8962,9 @@ export namespace Prisma {
     deliveryFee?: SortOrder
     customerLat?: SortOrder
     customerLng?: SortOrder
+    menuItemId?: SortOrderInput | SortOrder
+    menuItemName?: SortOrderInput | SortOrder
+    menuItemPrice?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
@@ -8928,6 +8986,9 @@ export namespace Prisma {
     deliveryFee?: FloatWithAggregatesFilter<"Order"> | number
     customerLat?: FloatWithAggregatesFilter<"Order"> | number
     customerLng?: FloatWithAggregatesFilter<"Order"> | number
+    menuItemId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    menuItemName?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    menuItemPrice?: FloatNullableWithAggregatesFilter<"Order"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
   }
 
@@ -9252,6 +9313,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersPlacedInput
     restaurant: RestaurantCreateNestedOneWithoutOrdersInput
@@ -9269,6 +9333,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
     feedback?: FeedbackUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -9280,6 +9347,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersPlacedNestedInput
     restaurant?: RestaurantUpdateOneRequiredWithoutOrdersNestedInput
@@ -9297,6 +9367,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: FeedbackUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -9311,6 +9384,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
   }
 
@@ -9321,6 +9397,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9334,6 +9413,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9741,6 +9823,17 @@ export namespace Prisma {
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -9761,6 +9854,9 @@ export namespace Prisma {
     deliveryFee?: SortOrder
     customerLat?: SortOrder
     customerLng?: SortOrder
+    menuItemId?: SortOrder
+    menuItemName?: SortOrder
+    menuItemPrice?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -9769,6 +9865,7 @@ export namespace Prisma {
     deliveryFee?: SortOrder
     customerLat?: SortOrder
     customerLng?: SortOrder
+    menuItemPrice?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -9781,6 +9878,9 @@ export namespace Prisma {
     deliveryFee?: SortOrder
     customerLat?: SortOrder
     customerLng?: SortOrder
+    menuItemId?: SortOrder
+    menuItemName?: SortOrder
+    menuItemPrice?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -9794,6 +9894,9 @@ export namespace Prisma {
     deliveryFee?: SortOrder
     customerLat?: SortOrder
     customerLng?: SortOrder
+    menuItemId?: SortOrder
+    menuItemName?: SortOrder
+    menuItemPrice?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -9802,6 +9905,7 @@ export namespace Prisma {
     deliveryFee?: SortOrder
     customerLat?: SortOrder
     customerLng?: SortOrder
+    menuItemPrice?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -9812,6 +9916,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type OrderCreateNestedOneWithoutFeedbackInput = {
@@ -10192,6 +10312,14 @@ export namespace Prisma {
     set?: $Enums.OrderStatus
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type UserUpdateOneRequiredWithoutOrdersPlacedNestedInput = {
     create?: XOR<UserCreateWithoutOrdersPlacedInput, UserUncheckedCreateWithoutOrdersPlacedInput>
     connectOrCreate?: UserCreateOrConnectWithoutOrdersPlacedInput
@@ -10427,6 +10555,17 @@ export namespace Prisma {
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -10437,6 +10576,22 @@ export namespace Prisma {
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type OrderCreateWithoutFeedbackInput = {
     id?: string
     status: $Enums.OrderStatus
@@ -10444,6 +10599,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersPlacedInput
     restaurant: RestaurantCreateNestedOneWithoutOrdersInput
@@ -10460,6 +10618,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
   }
 
@@ -10486,6 +10647,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersPlacedNestedInput
     restaurant?: RestaurantUpdateOneRequiredWithoutOrdersNestedInput
@@ -10502,6 +10666,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10580,6 +10747,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
     restaurant: RestaurantCreateNestedOneWithoutOrdersInput
     deliveryAgent?: UserCreateNestedOneWithoutDeliveriesInput
@@ -10595,6 +10765,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
     feedback?: FeedbackUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -10616,6 +10789,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersPlacedInput
     restaurant: RestaurantCreateNestedOneWithoutOrdersInput
@@ -10631,6 +10807,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
     feedback?: FeedbackUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -10728,6 +10907,9 @@ export namespace Prisma {
     deliveryFee?: FloatFilter<"Order"> | number
     customerLat?: FloatFilter<"Order"> | number
     customerLng?: FloatFilter<"Order"> | number
+    menuItemId?: StringNullableFilter<"Order"> | string | null
+    menuItemName?: StringNullableFilter<"Order"> | string | null
+    menuItemPrice?: FloatNullableFilter<"Order"> | number | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
   }
 
@@ -10862,6 +11044,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersPlacedInput
     deliveryAgent?: UserCreateNestedOneWithoutDeliveriesInput
@@ -10877,6 +11062,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
     feedback?: FeedbackUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -11271,6 +11459,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
   }
 
@@ -11283,6 +11474,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
   }
 
@@ -11308,6 +11502,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurant?: RestaurantUpdateOneRequiredWithoutOrdersNestedInput
     deliveryAgent?: UserUpdateOneWithoutDeliveriesNestedInput
@@ -11323,6 +11520,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: FeedbackUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -11336,6 +11536,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11346,6 +11549,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersPlacedNestedInput
     restaurant?: RestaurantUpdateOneRequiredWithoutOrdersNestedInput
@@ -11361,6 +11567,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: FeedbackUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -11374,6 +11583,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11441,6 +11653,9 @@ export namespace Prisma {
     deliveryFee: number
     customerLat: number
     customerLng: number
+    menuItemId?: string | null
+    menuItemName?: string | null
+    menuItemPrice?: number | null
     createdAt?: Date | string
   }
 
@@ -11469,6 +11684,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersPlacedNestedInput
     deliveryAgent?: UserUpdateOneWithoutDeliveriesNestedInput
@@ -11484,6 +11702,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feedback?: FeedbackUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -11497,6 +11718,9 @@ export namespace Prisma {
     deliveryFee?: FloatFieldUpdateOperationsInput | number
     customerLat?: FloatFieldUpdateOperationsInput | number
     customerLng?: FloatFieldUpdateOperationsInput | number
+    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemName?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItemPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

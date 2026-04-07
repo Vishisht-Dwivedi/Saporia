@@ -172,6 +172,9 @@ exports.Prisma.OrderScalarFieldEnum = {
   deliveryFee: 'deliveryFee',
   customerLat: 'customerLat',
   customerLng: 'customerLng',
+  menuItemId: 'menuItemId',
+  menuItemName: 'menuItemName',
+  menuItemPrice: 'menuItemPrice',
   createdAt: 'createdAt'
 };
 

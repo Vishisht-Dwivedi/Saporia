@@ -105,6 +105,37 @@ async function main() {
     console.log(`Created menu for ${r.name}:`, menuData)
   }
 
+  // Create a sample order for the customer using the first restaurant/menu item
+  if (restaurantRecords.length > 0) {
+    const firstRestaurant = restaurantRecords[0]
+    const menuItem = await prisma.menuItem.findFirst({ where: { restaurantId: firstRestaurant.id } })
+    if (menuItem) {
+      const dx = firstRestaurant.lat - customer.lat
+      const dy = firstRestaurant.lng - customer.lng
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      const fixedValue = 8
+      const deliveryFee = parseFloat((distance * fixedValue).toFixed(2))
+      const totalPrice = parseFloat((menuItem.price + deliveryFee).toFixed(2))
+      const order = await prisma.order.create({
+        data: {
+          customerId: customer.id,
+          restaurantId: firstRestaurant.id,
+          status: "PENDING_RESTAURANT",
+          totalPrice,
+          deliveryFee,
+          customerLat: customer.lat,
+          customerLng: customer.lng,
+          menuItemId: menuItem.id,
+          menuItemName: menuItem.name,
+          menuItemPrice: menuItem.price
+        }
+      })
+      console.log("Created sample order:", order)
+    } else {
+      console.log("No menu items found for first restaurant, skipping sample order")
+    }
+  }
+
   // 🛵 Delivery Agents
   const agents = [
     {

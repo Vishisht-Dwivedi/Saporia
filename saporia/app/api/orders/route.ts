@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     const {
         customerId,
         restaurantId,
-        totalPrice,
+        menuItemId,
         customerLat,
         customerLng
     } = body;
@@ -51,10 +51,23 @@ export async function POST(req: Request) {
       console.log("[POST /api/orders] Restaurant not found", restaurantId)
       return Response.json({ error: "Restaurant not found" }, { status: 404 })
     }
+    if (!menuItemId) {
+      console.log("[POST /api/orders] menuItemId missing")
+      return Response.json({ error: "menuItemId is required" }, { status: 400 })
+    }
+    const menuItem = await prisma.menuItem.findUnique({
+      where: { id: menuItemId }
+    })
+    if (!menuItem) {
+      console.log("[POST /api/orders] Menu item not found", menuItemId)
+      return Response.json({ error: "Menu item not found" }, { status: 404 })
+    }
     const dx = restaurant.lat - customerLat;
     const dy = restaurant.lng - customerLng;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    const deliveryFee = 20 + (8 * distance);
+    const fixedValue = 8; // rate per unit distance
+    const deliveryFee = parseFloat((distance * fixedValue).toFixed(2));
+    const totalPrice = parseFloat((menuItem.price + deliveryFee).toFixed(2));
     const order = await prisma.order.create({
         data: {
             customerId,
@@ -63,7 +76,10 @@ export async function POST(req: Request) {
             totalPrice,
             deliveryFee,
             customerLat,
-            customerLng
+            customerLng,
+            menuItemId: menuItem.id,
+            menuItemName: menuItem.name,
+            menuItemPrice: menuItem.price
         }
     });
     console.log("[POST /api/orders] Created order:", order)
