@@ -4860,6 +4860,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     userId: string | null
+    image: string | null
     lat: number | null
     lng: number | null
     createdAt: Date | null
@@ -4869,6 +4870,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     userId: string | null
+    image: string | null
     lat: number | null
     lng: number | null
     createdAt: Date | null
@@ -4878,6 +4880,7 @@ export namespace Prisma {
     id: number
     name: number
     userId: number
+    image: number
     lat: number
     lng: number
     createdAt: number
@@ -4899,6 +4902,7 @@ export namespace Prisma {
     id?: true
     name?: true
     userId?: true
+    image?: true
     lat?: true
     lng?: true
     createdAt?: true
@@ -4908,6 +4912,7 @@ export namespace Prisma {
     id?: true
     name?: true
     userId?: true
+    image?: true
     lat?: true
     lng?: true
     createdAt?: true
@@ -4917,6 +4922,7 @@ export namespace Prisma {
     id?: true
     name?: true
     userId?: true
+    image?: true
     lat?: true
     lng?: true
     createdAt?: true
@@ -5013,6 +5019,7 @@ export namespace Prisma {
     id: string
     name: string
     userId: string
+    image: string
     lat: number
     lng: number
     createdAt: Date
@@ -5041,6 +5048,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     userId?: boolean
+    image?: boolean
     lat?: boolean
     lng?: boolean
     createdAt?: boolean
@@ -5054,6 +5062,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     userId?: boolean
+    image?: boolean
     lat?: boolean
     lng?: boolean
     createdAt?: boolean
@@ -5064,6 +5073,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     userId?: boolean
+    image?: boolean
     lat?: boolean
     lng?: boolean
     createdAt?: boolean
@@ -5074,12 +5084,13 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     userId?: boolean
+    image?: boolean
     lat?: boolean
     lng?: boolean
     createdAt?: boolean
   }
 
-  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userId" | "lat" | "lng" | "createdAt", ExtArgs["result"]["restaurant"]>
+  export type RestaurantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userId" | "image" | "lat" | "lng" | "createdAt", ExtArgs["result"]["restaurant"]>
   export type RestaurantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     menuItems?: boolean | Restaurant$menuItemsArgs<ExtArgs>
@@ -5104,6 +5115,7 @@ export namespace Prisma {
       id: string
       name: string
       userId: string
+      image: string
       lat: number
       lng: number
       createdAt: Date
@@ -5536,6 +5548,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Restaurant", 'String'>
     readonly name: FieldRef<"Restaurant", 'String'>
     readonly userId: FieldRef<"Restaurant", 'String'>
+    readonly image: FieldRef<"Restaurant", 'String'>
     readonly lat: FieldRef<"Restaurant", 'Float'>
     readonly lng: FieldRef<"Restaurant", 'Float'>
     readonly createdAt: FieldRef<"Restaurant", 'DateTime'>
@@ -8418,6 +8431,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     userId: 'userId',
+    image: 'image',
     lat: 'lat',
     lng: 'lng',
     createdAt: 'createdAt'
@@ -8773,6 +8787,7 @@ export namespace Prisma {
     id?: StringFilter<"Restaurant"> | string
     name?: StringFilter<"Restaurant"> | string
     userId?: StringFilter<"Restaurant"> | string
+    image?: StringFilter<"Restaurant"> | string
     lat?: FloatFilter<"Restaurant"> | number
     lng?: FloatFilter<"Restaurant"> | number
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
@@ -8785,6 +8800,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     userId?: SortOrder
+    image?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
     createdAt?: SortOrder
@@ -8800,6 +8816,7 @@ export namespace Prisma {
     OR?: RestaurantWhereInput[]
     NOT?: RestaurantWhereInput | RestaurantWhereInput[]
     name?: StringFilter<"Restaurant"> | string
+    image?: StringFilter<"Restaurant"> | string
     lat?: FloatFilter<"Restaurant"> | number
     lng?: FloatFilter<"Restaurant"> | number
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
@@ -8812,6 +8829,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     userId?: SortOrder
+    image?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
     createdAt?: SortOrder
@@ -8829,6 +8847,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Restaurant"> | string
     name?: StringWithAggregatesFilter<"Restaurant"> | string
     userId?: StringWithAggregatesFilter<"Restaurant"> | string
+    image?: StringWithAggregatesFilter<"Restaurant"> | string
     lat?: FloatWithAggregatesFilter<"Restaurant"> | number
     lng?: FloatWithAggregatesFilter<"Restaurant"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
@@ -9191,6 +9210,7 @@ export namespace Prisma {
   export type RestaurantCreateInput = {
     id?: string
     name: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -9203,6 +9223,7 @@ export namespace Prisma {
     id?: string
     name: string
     userId: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -9213,6 +9234,7 @@ export namespace Prisma {
   export type RestaurantUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9225,6 +9247,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9236,6 +9259,7 @@ export namespace Prisma {
     id?: string
     name: string
     userId: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -9244,6 +9268,7 @@ export namespace Prisma {
   export type RestaurantUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9253,6 +9278,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9749,6 +9775,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     userId?: SortOrder
+    image?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
     createdAt?: SortOrder
@@ -9763,6 +9790,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     userId?: SortOrder
+    image?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
     createdAt?: SortOrder
@@ -9772,6 +9800,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     userId?: SortOrder
+    image?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
     createdAt?: SortOrder
@@ -10851,6 +10880,7 @@ export namespace Prisma {
   export type RestaurantCreateWithoutUserInput = {
     id?: string
     name: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -10861,6 +10891,7 @@ export namespace Prisma {
   export type RestaurantUncheckedCreateWithoutUserInput = {
     id?: string
     name: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -10979,6 +11010,7 @@ export namespace Prisma {
     id?: StringFilter<"Restaurant"> | string
     name?: StringFilter<"Restaurant"> | string
     userId?: StringFilter<"Restaurant"> | string
+    image?: StringFilter<"Restaurant"> | string
     lat?: FloatFilter<"Restaurant"> | number
     lng?: FloatFilter<"Restaurant"> | number
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
@@ -11161,6 +11193,7 @@ export namespace Prisma {
   export type RestaurantCreateWithoutMenuItemsInput = {
     id?: string
     name: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -11172,6 +11205,7 @@ export namespace Prisma {
     id?: string
     name: string
     userId: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -11197,6 +11231,7 @@ export namespace Prisma {
   export type RestaurantUpdateWithoutMenuItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11208,6 +11243,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11248,6 +11284,7 @@ export namespace Prisma {
   export type RestaurantCreateWithoutOrdersInput = {
     id?: string
     name: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -11259,6 +11296,7 @@ export namespace Prisma {
     id?: string
     name: string
     userId: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -11371,6 +11409,7 @@ export namespace Prisma {
   export type RestaurantUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11382,6 +11421,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11490,6 +11530,7 @@ export namespace Prisma {
   export type RestaurantCreateManyUserInput = {
     id?: string
     name: string
+    image: string
     lat: number
     lng: number
     createdAt?: Date | string
@@ -11613,6 +11654,7 @@ export namespace Prisma {
   export type RestaurantUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11623,6 +11665,7 @@ export namespace Prisma {
   export type RestaurantUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11633,6 +11676,7 @@ export namespace Prisma {
   export type RestaurantUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     lat?: FloatFieldUpdateOperationsInput | number
     lng?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

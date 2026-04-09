@@ -150,6 +150,7 @@ exports.Prisma.RestaurantScalarFieldEnum = {
   id: 'id',
   name: 'name',
   userId: 'userId',
+  image: 'image',
   lat: 'lat',
   lng: 'lng',
   createdAt: 'createdAt'

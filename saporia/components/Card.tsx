@@ -1,15 +1,30 @@
+"use client";
+
 import React from "react";
+import clsx from "clsx";
 
 interface CardProps {
   children: React.ReactNode;
   className?: string;
+  hoverable?: boolean;
 }
 
-export default function Card({ children, className = "" }: CardProps) {
+export default function Card({
+  children,
+  className = "",
+  hoverable = true,
+}: CardProps) {
   return (
     <div
-      className={`bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-100 ${className}`}
-      style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.07)" }}
+      className={clsx(
+        "relative rounded-2xl border border-gray-200/60 bg-white/70 backdrop-blur-md",
+        "p-5 md:p-6",
+        "transition-all duration-300 ease-out",
+        "shadow-[0_4px_20px_rgba(0,0,0,0.06)]",
+        hoverable &&
+          "hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)] hover:-translate-y-1 hover:scale-[1.01]",
+        className
+      )}
     >
       {children}
     </div>

@@ -238,14 +238,57 @@ export default function CustomerPage() {
       <main className="max-w-5xl mx-auto px-4 py-8">
         <h2 className="text-3xl font-extrabold mb-4 text-[#e23744] tracking-tight">Restaurants</h2>
         {/* Map showing restaurants and user */}
-        <Map restaurants={restaurants} user={user} onRestaurantClick={loadMenu} />
-
-        <div className="flex flex-wrap gap-6">
+        <div className="my-4">
+          <div className="
+            rounded-2xl overflow-hidden
+            border border-gray-200/60
+            bg-white/70 backdrop-blur-sm
+            shadow-[0_4px_20px_rgba(0,0,0,0.06)]
+          ">
+            <Map
+              restaurants={restaurants}
+              user={user}
+              onRestaurantClick={loadMenu}
+            />
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-3 items-center justify-center align-middle w-full gap-4">
           {restaurants.map(r => (
-            <Card key={r.id} className="w-72 border-[#e23744] border-opacity-20 hover:shadow-lg transition-shadow">
-              <div className="font-semibold text-lg mb-2 text-[#e23744]">{r.name}</div>
-              <div className="flex gap-2">
-                <Button onClick={() => loadMenu(r)} className="flex-1 mt-2 bg-[#e23744] hover:bg-[#b71c2b]">View Menu</Button>
+            <Card
+              key={r.id}
+              className="w-full p-0 overflow-hidden border border-gray-200/60 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+            >
+              {/* Top strip (visual identity, no data change) */}
+              <div className="h-24 bg-linear-to-br from-red-100 to-red-50 flex items-end p-3">
+                <div className="text-xs bg-white/90 px-2 py-0.5 rounded-full text-gray-600 shadow-sm">
+                  Nearby
+                </div>
+              </div>
+          
+              {/* Content */}
+              <div className="p-4 space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="font-semibold text-base text-gray-900 leading-tight">
+                    {r.name}
+                  </div>
+          
+                  {/* Static badge (no backend dependency) */}
+                  <div className="text-[11px] bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                    { (Math.random()*5).toFixed(1)}★
+                  </div>
+                </div>
+          
+                <div className="text-xs text-gray-500">
+                  Fast delivery • Popular
+                </div>
+          
+                <Button
+                  onClick={() => loadMenu(r)}
+                  className="w-full mt-2"
+                >
+                  View Menu
+                </Button>
               </div>
             </Card>
           ))}
@@ -253,30 +296,98 @@ export default function CustomerPage() {
 
         {/* Floating Cart Button */}
         <div className="fixed right-6 top-24 z-40">
-          <button onClick={() => setCartOpen(true)} className="bg-[#e23744] text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-3">
-            Cart ({cart.reduce((s, c) => s + c.qty, 0)})
+          <button
+            onClick={() => setCartOpen(true)}
+            className="
+              flex items-center gap-3
+              px-5 py-2.5
+              rounded-full
+              bg-red-500 text-white
+              text-sm font-medium
+              shadow-[0_8px_25px_rgba(239,68,68,0.35)]
+              hover:bg-red-600 hover:shadow-[0_10px_30px_rgba(239,68,68,0.45)]
+              active:scale-95
+              transition-all duration-200
+            "
+          >
+            {/* Icon (pure UI, no logic impact) */}
+            <span className="text-lg leading-none">🛒</span>
+
+            {/* Label */}
+            <span>
+              Cart ({cart.reduce((s, c) => s + c.qty, 0)})
+            </span>
           </button>
         </div>
 
         {/* Menu modal (opened via View Menu) */}
         {menuOpen && selectedRestaurant && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 shadow-lg max-w-2xl w-full">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-2xl font-semibold text-[#e23744]">Menu — {selectedRestaurant.name}</h3>
-                <button onClick={() => setMenuOpen(false)} className="text-gray-500">Close</button>
-              </div>
-              <div className="space-y-3 max-h-[50vh] overflow-auto">
-                {menu.length === 0 && <div className="text-gray-500">No items available.</div>}
-                {menu.map(item => (
-                  <div key={item.id} className="flex justify-between items-center border-b py-2">
-                    <div>
-                      <div className="font-medium">{item.name}</div>
-                      <div className="text-sm text-gray-500">₹{item.price}</div>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 shadow-2xl max-w-2xl w-full border border-gray-100">
+
+            {/* Header */}
+            <div className="flex justify-between items-center mb-5">
+              <h3 className="text-xl font-semibold text-gray-900 tracking-tight">
+                Menu — <span className="text-red-500">{selectedRestaurant.name}</span>
+              </h3>
+
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="
+                  text-gray-400 hover:text-gray-700
+                  text-lg font-medium
+                  transition-colors
+                "
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+                  {menu.length === 0 && <div className="text-gray-500">No items available.</div>}
+                  {menu.map(item => (
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-center py-3 border-b border-gray-100 last:border-none"
+                  >
+                    {/* Left */}
+                    <div className="space-y-1">
+                      <div className="font-medium text-gray-900 leading-tight">
+                        {item.name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        ₹{item.price}
+                      </div>
                     </div>
+                    {/* Right */}
                     <div className="flex items-center gap-2">
-                      <Button onClick={() => addToCart(item, selectedRestaurant)} className="bg-[#f59e9e] hover:bg-[#f07b7b]">Add to cart</Button>
-                      <Button onClick={() => { setSelectedItem(item); placeOrder(item) }} className="bg-[#e23744] hover:bg-[#b71c2b]">Order</Button>
+                      <Button
+                        onClick={() => addToCart(item, selectedRestaurant)}
+                        className="
+                          px-3 py-1.5 text-xs
+                          bg-red-50 text-red-600
+                          hover:bg-red-100
+                          rounded-full
+                        "
+                      >
+                        Add
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setSelectedItem(item);
+                          placeOrder(item);
+                        }}
+                        className="
+                          px-4 py-1.5 text-xs
+                          bg-red-500 text-white
+                          hover:bg-red-600
+                          rounded-full
+                          shadow-sm
+                        "
+                      >
+                        Order
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -333,19 +444,69 @@ export default function CustomerPage() {
         )}
 
         <h2 className="text-3xl font-extrabold mt-10 mb-4 text-[#e23744] tracking-tight">Your Orders</h2>
-        <div>
-          {orders.length === 0 && <div className="text-gray-400">No orders yet.</div>}
+        <div className="space-y-4">
+          {orders.length === 0 && (
+            <div className="text-gray-400 text-sm">No orders yet.</div>
+          )}
+
           {orders.map(o => (
-            <Card key={o.id} className="bg-[#fff0ee] border-[#e23744] border-opacity-10">
-              <div className="mb-1"><b>Order:</b> {o.id}</div>
-              <div className="mb-1"><b>Status:</b> <span className="text-[#e23744] font-semibold">{o.status.replace(/_/g, ' ')}</span></div>
-              <div className="mb-1"><b>Restaurant:</b> {o.restaurant?.name || o.restaurantId}</div>
-              <div className="mb-1"><b>Item:</b> {o.menuItemName || '—'} {o.menuItemPrice != null && (<span className="text-[#e23744] font-semibold">₹{o.menuItemPrice}</span>)}</div>
-              <div className="mb-1"><b>Delivery Fee:</b> <span className="text-[#e23744] font-semibold">₹{o.deliveryFee?.toFixed(2) || '0.00'}</span></div>
-              <div className="mb-1"><b>Total:</b> <span className="text-[#e23744] font-semibold">₹{o.totalPrice}</span></div>
-              {o.status === 'OUT_FOR_DELIVERY' && (
-                <div className="mt-2">
-                  <Button onClick={() => markReceived(o.id)} className="bg-green-600 hover:bg-green-700">Confirm Received</Button>
+            <Card
+              key={o.id}
+              className="p-5 border border-gray-200/60 bg-white/80 backdrop-blur-sm shadow-[0_4px_20px_rgba(0,0,0,0.05)]"
+            >
+              {/* Top Row */}
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <div className="text-xs text-gray-400">Order ID</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {o.id}
+                  </div>
+                </div>
+          
+                <div className="text-xs px-2.5 py-1 rounded-full bg-red-50 text-red-600 font-medium">
+                  {o.status.replace(/_/g, " ")}
+                </div>
+              </div>
+          
+              {/* Restaurant */}
+              <div className="text-sm font-semibold text-gray-900 mb-1">
+                {o.restaurant?.name || o.restaurantId}
+              </div>
+          
+              {/* Item */}
+              <div className="text-sm text-gray-600 mb-3">
+                {o.menuItemName || "—"}
+                {o.menuItemPrice != null && (
+                  <span className="ml-2 text-red-500 font-medium">
+                    ₹{o.menuItemPrice}
+                  </span>
+                )}
+              </div>
+              
+              {/* Pricing */}
+              <div className="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Delivery Fee</span>
+                <span className="font-medium text-gray-900">
+                  ₹{o.deliveryFee?.toFixed(2) || "0.00"}
+                </span>
+              </div>
+              
+              <div className="flex justify-between text-sm font-semibold text-gray-900">
+                <span>Total</span>
+                <span className="text-red-500">
+                  ₹{o.totalPrice}
+                </span>
+              </div>
+              
+              {/* Action */}
+              {o.status === "OUT_FOR_DELIVERY" && (
+                <div className="mt-4">
+                  <Button
+                    onClick={() => markReceived(o.id)}
+                    className="bg-green-600 hover:bg-green-700 w-full"
+                  >
+                    Confirm Received
+                  </Button>
                 </div>
               )}
             </Card>

@@ -64,7 +64,7 @@ export async function POST(req: Request) {
     }
     const dx = restaurant.lat - customerLat;
     const dy = restaurant.lng - customerLng;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    const distance = Math.sqrt(dx * dx + dy * dy) * 100;
     const fixedValue = 8; // rate per unit distance
     const deliveryFee = parseFloat((distance * fixedValue).toFixed(2));
     const totalPrice = parseFloat((menuItem.price + deliveryFee).toFixed(2));

@@ -60,9 +60,9 @@ model Restaurant {
   name   String
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
-
-  lat Float
-  lng Float
+  image  String
+  lat    Float
+  lng    Float
 
   menuItems MenuItem[]
   orders    Order[]
