@@ -7,14 +7,17 @@ type Restaurant = {
   id: string;
   name: string;
   image: string;
+  lat: string;
+  lng: string;
 };
 
 type Props = {
   restaurants: Restaurant[];
   loadMenu: (restaurant: Restaurant) => void;
+  userCoord:{lat:string, lng:string}
 };
 
-export default function RestaurantSlider({ restaurants, loadMenu }: Props) {
+export default function RestaurantSlider({ restaurants, loadMenu, userCoord }: Props) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const scroll = (dir: "left" | "right") => {
@@ -45,9 +48,10 @@ export default function RestaurantSlider({ restaurants, loadMenu }: Props) {
         {restaurants.map((r) => (
           <Card
             key={r.id}
-            className="snap-start min-w-65 max-w-65 shrink-0 overflow-hidden border border-gray-200/70 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-80"
+            className="bg-white/70 backdrop-blur-md snap-start min-w-65 max-w-65 shrink-0 overflow-hidden border border-white/40 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-80"
           >
-            <div className="w-full h-40 overflow-hidden">
+          <div className="relative w-full h-40 overflow-hidden">
+              <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
               <img
                 src={r.image}
                 alt={r.name}
@@ -61,7 +65,15 @@ export default function RestaurantSlider({ restaurants, loadMenu }: Props) {
                   {r.name}
                 </h3>
                 <p className="text-xs text-gray-500 mt-1">
-                  Nearby • Fast Delivery
+                  {Math.round((Math.pow((parseFloat(r.lat) - parseFloat(userCoord.lat)), 2) + Math.pow((parseFloat(r.lng) - parseFloat(userCoord.lng)), 2)) * 500 * 3)}
+                  {` `}km
+                {` `}
+                  •
+                  {` `}
+                  ETA:
+                {` `}
+                  {Math.round((Math.pow((parseFloat(r.lat) - parseFloat(userCoord.lat)), 2) + Math.pow((parseFloat(r.lng) - parseFloat(userCoord.lng)), 2)) * 500 * 3) * 3}
+                  {` `}min
                 </p>
               </div>
 

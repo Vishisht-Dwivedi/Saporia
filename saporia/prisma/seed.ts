@@ -44,7 +44,65 @@ async function main() {
     { name: "Ranjit Lakeview", lat: 23.2465, lng: 77.4023 },
     { name: "Pin and Pan", lat: 23.2250, lng: 77.4100 }
   ];
+  const foodImageMap: Record<string, string> = {
+    // Indian
+    "Dal Tadka": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYVBfnYGo-E5hZMW33sxJT1rrQNN0diBjOsw&s",
+    "Paneer Butter Masala": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQRQMKHs5qBBmBwVN6e7UTPlt3PpK2c6T8XA&s",
+    "Kadai Paneer": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRMQBO6XkbXnpcM5LTVXKxb_t2ab4zQGSztQ&s",
+    "Veg Biryani": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtDiMiok2ektyhL9ZFNhPX3psPNJKIaVY3Ng&s",
+    "Jeera Rice": "https://www.whiskaffair.com/wp-content/uploads/2021/06/Jeera-Rice-2-3-1-500x375.jpg",
+    "Butter Naan": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTww8shUIMWSTmMWK-gy0If0w7mBaIiVapWQ&s",
+    "Tandoori Roti": "https://www.indianhealthyrecipes.com/wp-content/uploads/2023/09/tandoori-roti-recipe.jpg",
+    "Gulab Jamun": "https://www.vegrecipesofindia.com/wp-content/uploads/2022/10/gulab-jamun-recipe-01.jpg",
+    "Lassi": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLLg83AMzi5zbjuKkZOLMJlWgvLXVDHBxzLw&s",
+    "Masala Papad": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkdI0CKzmwWqTayhCEaLElQrEVy2hYn3VUkg&s",
 
+    // Fast Food
+    "Burger": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOsYOnhSQXYIbmGMrYCVUmYeIMnX22FTHewA&s",
+    "Cheese Burger": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuBic-snensuX1_i0HDDxRk3iVv0deCUG0gw&s",
+    "Fries": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIUzERgVNoFDB8gpKrOOxmu50m-gAy1Ph-_A&s",
+    "Pizza": "https://www.tillamook.com/_next/image?url=https%3A%2F%2Fimages.ctfassets.net%2Fj8tkpy1gjhi5%2F5OvVmigx6VIUsyoKz1EHUs%2Fb8173b7dcfbd6da341ce11bcebfa86ea%2FSalami-pizza-hero.jpg&w=3840&q=75",
+    "Sandwich": "https://staticcookist.akamaized.net/wp-content/uploads/sites/22/2025/05/clubsandwich-1200x675.jpg",
+    "Cold Coffee": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwb39dnHXFMWaZpGnWUWIvlUVgdsP40iDTUQ&s",
+    "Milkshake": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRQVM5o2WYIKov2153CCjO0p7iFFxYWvoRhw&s",
+    "Hot Dog": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHeLkcqgOn3kYqsOfP0m7pfCNh2OOQXuL4hg&s",
+    "Nachos": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfBFuk7Whsr9DF0nS6GK_ccVNLJwG5dkj7xA&s",
+    "Wrap": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhjV1WfCbxxm5khR0Fil44_hSWV99RHqPgSw&s",
+
+    // Cafe
+    "Cappuccino": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXCjQlsBZIAV0LsneV7WRawhdQGm4l_jqkcg&s",
+    "Latte": "https://source.unsplash.com/400x300/?latte",
+    "Espresso": "https://source.unsplash.com/400x300/?espresso",
+    "Brownie": "https://source.unsplash.com/400x300/?brownie",
+    "Waffle": "https://source.unsplash.com/400x300/?waffle",
+    "Pancakes": "https://source.unsplash.com/400x300/?pancakes",
+    "Garlic Bread": "https://source.unsplash.com/400x300/?garlic,bread",
+    "Veg Sandwich": "https://source.unsplash.com/400x300/?veg,sandwich",
+    "Pasta": "https://source.unsplash.com/400x300/?pasta",
+
+    // Sweets
+    "Rasgulla": "https://source.unsplash.com/400x300/?rasgulla",
+    "Kaju Katli": "https://source.unsplash.com/400x300/?kaju,katli",
+    "Jalebi": "https://source.unsplash.com/400x300/?jalebi",
+    "Rabri": "https://source.unsplash.com/400x300/?rabri",
+    "Milk Cake": "https://source.unsplash.com/400x300/?milk,cake",
+    "Ladoo": "https://source.unsplash.com/400x300/?ladoo",
+    "Barfi": "https://source.unsplash.com/400x300/?barfi",
+    "Kulfi": "https://source.unsplash.com/400x300/?kulfi",
+    "Falooda": "https://source.unsplash.com/400x300/?falooda",
+
+    // Nonveg
+    "Chicken Biryani": "https://source.unsplash.com/400x300/?chicken,biryani",
+    "Butter Chicken": "https://source.unsplash.com/400x300/?butter,chicken",
+    "Chicken Curry": "https://source.unsplash.com/400x300/?chicken,curry",
+    "Tandoori Chicken": "https://source.unsplash.com/400x300/?tandoori,chicken",
+    "Fish Fry": "https://source.unsplash.com/400x300/?fish,fry",
+    "Mutton Curry": "https://source.unsplash.com/400x300/?mutton,curry",
+    "Chicken Tikka": "https://source.unsplash.com/400x300/?chicken,tikka",
+    "Egg Curry": "https://source.unsplash.com/400x300/?egg,curry",
+    "Keema": "https://source.unsplash.com/400x300/?keema",
+    "Seekh Kebab": "https://source.unsplash.com/400x300/?seekh,kebab"
+  };
   const baseMenus = {
     indian: [
       "Dal Tadka", "Paneer Butter Masala", "Kadai Paneer", "Veg Biryani",
@@ -139,13 +197,15 @@ async function main() {
     for (const t of types) items = items.concat(baseMenus[t]);
 
     items = [...new Set(items)].slice(0, 12);
+    items.forEach(item => console.log(foodImageMap[item]));
     await prisma.menuItem.createMany({
       data: items.map(name => ({
         name,
         price: Math.floor(Math.random() * 250) + 80,
-        restaurantId: r.id
-      }))
-    });
+        restaurantId: r.id,
+        image: foodImageMap[name] || "https://source.unsplash.com/400x300/?food"
+    }))
+  });
   }
 
   // 🛵 Delivery agents

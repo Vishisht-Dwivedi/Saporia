@@ -160,6 +160,7 @@ exports.Prisma.MenuItemScalarFieldEnum = {
   id: 'id',
   name: 'name',
   price: 'price',
+  image: 'image',
   restaurantId: 'restaurantId'
 };
 

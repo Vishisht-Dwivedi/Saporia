@@ -6043,6 +6043,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     price: number | null
+    image: string | null
     restaurantId: string | null
   }
 
@@ -6050,6 +6051,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     price: number | null
+    image: string | null
     restaurantId: string | null
   }
 
@@ -6057,6 +6059,7 @@ export namespace Prisma {
     id: number
     name: number
     price: number
+    image: number
     restaurantId: number
     _all: number
   }
@@ -6074,6 +6077,7 @@ export namespace Prisma {
     id?: true
     name?: true
     price?: true
+    image?: true
     restaurantId?: true
   }
 
@@ -6081,6 +6085,7 @@ export namespace Prisma {
     id?: true
     name?: true
     price?: true
+    image?: true
     restaurantId?: true
   }
 
@@ -6088,6 +6093,7 @@ export namespace Prisma {
     id?: true
     name?: true
     price?: true
+    image?: true
     restaurantId?: true
     _all?: true
   }
@@ -6182,6 +6188,7 @@ export namespace Prisma {
     id: string
     name: string
     price: number
+    image: string
     restaurantId: string
     _count: MenuItemCountAggregateOutputType | null
     _avg: MenuItemAvgAggregateOutputType | null
@@ -6208,6 +6215,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     price?: boolean
+    image?: boolean
     restaurantId?: boolean
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menuItem"]>
@@ -6216,6 +6224,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     price?: boolean
+    image?: boolean
     restaurantId?: boolean
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menuItem"]>
@@ -6224,6 +6233,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     price?: boolean
+    image?: boolean
     restaurantId?: boolean
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menuItem"]>
@@ -6232,10 +6242,11 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     price?: boolean
+    image?: boolean
     restaurantId?: boolean
   }
 
-  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "restaurantId", ExtArgs["result"]["menuItem"]>
+  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "image" | "restaurantId", ExtArgs["result"]["menuItem"]>
   export type MenuItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
   }
@@ -6255,6 +6266,7 @@ export namespace Prisma {
       id: string
       name: string
       price: number
+      image: string
       restaurantId: string
     }, ExtArgs["result"]["menuItem"]>
     composites: {}
@@ -6683,6 +6695,7 @@ export namespace Prisma {
     readonly id: FieldRef<"MenuItem", 'String'>
     readonly name: FieldRef<"MenuItem", 'String'>
     readonly price: FieldRef<"MenuItem", 'Float'>
+    readonly image: FieldRef<"MenuItem", 'String'>
     readonly restaurantId: FieldRef<"MenuItem", 'String'>
   }
     
@@ -8444,6 +8457,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     price: 'price',
+    image: 'image',
     restaurantId: 'restaurantId'
   };
 
@@ -8860,6 +8874,7 @@ export namespace Prisma {
     id?: StringFilter<"MenuItem"> | string
     name?: StringFilter<"MenuItem"> | string
     price?: FloatFilter<"MenuItem"> | number
+    image?: StringFilter<"MenuItem"> | string
     restaurantId?: StringFilter<"MenuItem"> | string
     restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
   }
@@ -8868,6 +8883,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    image?: SortOrder
     restaurantId?: SortOrder
     restaurant?: RestaurantOrderByWithRelationInput
   }
@@ -8879,6 +8895,7 @@ export namespace Prisma {
     NOT?: MenuItemWhereInput | MenuItemWhereInput[]
     name?: StringFilter<"MenuItem"> | string
     price?: FloatFilter<"MenuItem"> | number
+    image?: StringFilter<"MenuItem"> | string
     restaurantId?: StringFilter<"MenuItem"> | string
     restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
   }, "id">
@@ -8887,6 +8904,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    image?: SortOrder
     restaurantId?: SortOrder
     _count?: MenuItemCountOrderByAggregateInput
     _avg?: MenuItemAvgOrderByAggregateInput
@@ -8902,6 +8920,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"MenuItem"> | string
     name?: StringWithAggregatesFilter<"MenuItem"> | string
     price?: FloatWithAggregatesFilter<"MenuItem"> | number
+    image?: StringWithAggregatesFilter<"MenuItem"> | string
     restaurantId?: StringWithAggregatesFilter<"MenuItem"> | string
   }
 
@@ -9288,6 +9307,7 @@ export namespace Prisma {
     id?: string
     name: string
     price: number
+    image: string
     restaurant: RestaurantCreateNestedOneWithoutMenuItemsInput
   }
 
@@ -9295,6 +9315,7 @@ export namespace Prisma {
     id?: string
     name: string
     price: number
+    image: string
     restaurantId: string
   }
 
@@ -9302,6 +9323,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    image?: StringFieldUpdateOperationsInput | string
     restaurant?: RestaurantUpdateOneRequiredWithoutMenuItemsNestedInput
   }
 
@@ -9309,6 +9331,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    image?: StringFieldUpdateOperationsInput | string
     restaurantId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -9316,6 +9339,7 @@ export namespace Prisma {
     id?: string
     name: string
     price: number
+    image: string
     restaurantId: string
   }
 
@@ -9323,12 +9347,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    image?: StringFieldUpdateOperationsInput | string
   }
 
   export type MenuItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    image?: StringFieldUpdateOperationsInput | string
     restaurantId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -9820,6 +9846,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    image?: SortOrder
     restaurantId?: SortOrder
   }
 
@@ -9831,6 +9858,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    image?: SortOrder
     restaurantId?: SortOrder
   }
 
@@ -9838,6 +9866,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    image?: SortOrder
     restaurantId?: SortOrder
   }
 
@@ -11051,12 +11080,14 @@ export namespace Prisma {
     id?: string
     name: string
     price: number
+    image: string
   }
 
   export type MenuItemUncheckedCreateWithoutRestaurantInput = {
     id?: string
     name: string
     price: number
+    image: string
   }
 
   export type MenuItemCreateOrConnectWithoutRestaurantInput = {
@@ -11171,6 +11202,7 @@ export namespace Prisma {
     id?: StringFilter<"MenuItem"> | string
     name?: StringFilter<"MenuItem"> | string
     price?: FloatFilter<"MenuItem"> | number
+    image?: StringFilter<"MenuItem"> | string
     restaurantId?: StringFilter<"MenuItem"> | string
   }
 
@@ -11686,6 +11718,7 @@ export namespace Prisma {
     id?: string
     name: string
     price: number
+    image: string
   }
 
   export type OrderCreateManyRestaurantInput = {
@@ -11707,18 +11740,21 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    image?: StringFieldUpdateOperationsInput | string
   }
 
   export type MenuItemUncheckedUpdateWithoutRestaurantInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    image?: StringFieldUpdateOperationsInput | string
   }
 
   export type MenuItemUncheckedUpdateManyWithoutRestaurantInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    image?: StringFieldUpdateOperationsInput | string
   }
 
   export type OrderUpdateWithoutRestaurantInput = {

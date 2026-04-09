@@ -25,6 +25,7 @@ export async function GET() {
         id: item.id, // Use the first item's ID as the food item ID
         name: item.name,
         price: item.price,
+        image: item.image,
         restaurants: []
       }
     }

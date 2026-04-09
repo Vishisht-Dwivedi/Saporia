@@ -311,7 +311,7 @@ export default function CustomerPage() {
   }
 
   return (
-    <div className="bg-[#fff8f6] min-h-screen font-sans">
+    <div className="min-h-screen bg-linear-to-br from-red-50 via-white to-orange-50">
       <Navbar user={user} />
       <main className="w-full mx-auto px-4 py-2">
         <h2 className="text-3xl font-extrabold my-4 text-[#e23744] tracking-tight">Find Restaurants Near You</h2>
@@ -334,6 +334,7 @@ export default function CustomerPage() {
         <RestaurantSlider
           restaurants={restaurants}
           loadMenu={loadMenu}
+          userCoord={({lat: user?.lat, lng: user?.lng})}
         />
 
         <h2 className="text-3xl font-extrabold my-6 text-[#e23744] tracking-tight"> Explore Foods</h2>
@@ -355,6 +356,7 @@ export default function CustomerPage() {
               hover:bg-red-600 hover:shadow-[0_10px_30px_rgba(239,68,68,0.45)]
               active:scale-95
               transition-all duration-200
+              
             "
           >
             {/* Icon (pure UI, no logic impact) */}

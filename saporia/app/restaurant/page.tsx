@@ -123,7 +123,9 @@ export default function RestaurantPage() {
               "
             >
               {/* Image placeholder (safe, no backend dependency) */}
-              <div className="h-28 bg-linear-to-br from-red-100 to-red-50" />
+              <div className="flex items-center justify-center align-middle overflow-hidden h-32">
+              <img src={item.image} className="w-full" alt="" />
+              </div>
           
               {/* Content */}
               <div className="p-4 space-y-2">

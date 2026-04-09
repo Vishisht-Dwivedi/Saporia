@@ -22,12 +22,7 @@ export async function GET(req: Request) {
 
     const orders = await prisma.order.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
-        include: {
-            restaurant: true,
-            customer: true,
-            deliveryAgent: true
-        }
+        orderBy: { createdAt: 'desc' }
     })
     console.log("[GET /api/orders] Returning orders:", orders)
     return Response.json(orders)
