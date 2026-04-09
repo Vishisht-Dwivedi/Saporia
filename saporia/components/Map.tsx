@@ -147,7 +147,7 @@ function Map({
   }, [restaurants, user, onRestaurantClick]);
 
   return (
-    <div className="w-full px-4 md:px-6 mt-4">
+    <div className="w-full px-1 my-2">
       <div className="relative rounded-2xl border border-gray-200/60 bg-white/70 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.06)] overflow-hidden">
         
         {/* Map container */}

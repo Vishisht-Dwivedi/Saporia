@@ -91,7 +91,23 @@ async function main() {
   };
 
   const restaurantRecords = [];
-
+  const restaurantImages: Record<string, string> = {
+    "Sharma Vishnu Fast Food": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d",
+    "Manohar Dairy & Restaurant": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5",
+    "Under The Mango Tree": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0",
+    "Indian Coffee House": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb",
+    "Bapu Ki Kutia": "https://images.unsplash.com/photo-1552566626-52f8b828add9",
+    "Hakeem's Restaurant": "https://images.unsplash.com/photo-1541542684-4a0c0b1e2a36",
+    "Zam Zam Restaurant": "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
+    "Taste of India": "https://images.unsplash.com/photo-1592861956120-e524fc739696",
+    "Cafe Coffee Day": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085",
+    "Domino's Pizza": "https://images.unsplash.com/photo-1594007654729-407eedc4be65",
+    "The Belgian Waffle Co.": "https://images.unsplash.com/photo-1513442542250-854d436a73f2",
+    "Sagar Gaire": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+    "Amado Cafe": "https://images.unsplash.com/photo-1509042239860-f550ce710b93",
+    "Ranjit Lakeview": "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+    "Pin and Pan": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d"
+  };
   // 🏪 Create restaurants
   for (const info of restaurantInfos) {
     const user = await prisma.user.create({
@@ -103,14 +119,13 @@ async function main() {
         lng: info.lng
       }
     });
-
     const restaurant = await prisma.restaurant.create({
       data: {
         name: info.name,
         userId: user.id,
         lat: info.lat,
         lng: info.lng,
-        image: "https://via.placeholder.com/300"
+        image: restaurantImages[info.name] || "https://via.placeholder.com/300"
       }
     });
 
@@ -120,16 +135,14 @@ async function main() {
   // 🍽️ Menus
   for (const r of restaurantRecords) {
     const types = restaurantMenuType[r.name] || ["indian"];
-
     let items: string[] = [];
     for (const t of types) items = items.concat(baseMenus[t]);
 
     items = [...new Set(items)].slice(0, 12);
-
     await prisma.menuItem.createMany({
       data: items.map(name => ({
         name,
-        price: Math.floor(Math.random() * 200) + 50,
+        price: Math.floor(Math.random() * 250) + 80,
         restaurantId: r.id
       }))
     });

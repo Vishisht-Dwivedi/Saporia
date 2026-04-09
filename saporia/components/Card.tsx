@@ -18,7 +18,7 @@ export default function Card({
     <div
       className={clsx(
         "relative rounded-2xl border border-gray-200/60 bg-white/70 backdrop-blur-md",
-        "p-5 md:p-6",
+        "p-0",
         "transition-all duration-300 ease-out",
         "shadow-[0_4px_20px_rgba(0,0,0,0.06)]",
         hoverable &&

@@ -71,10 +71,9 @@ model Restaurant {
 }
 
 model MenuItem {
-  id    String @id @default(cuid())
-  name  String
-  price Float
-
+  id           String     @id @default(cuid())
+  name         String
+  price        Float
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
   restaurantId String
 }

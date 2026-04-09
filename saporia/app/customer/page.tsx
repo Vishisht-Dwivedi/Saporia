@@ -6,12 +6,18 @@ import Card from "@/components/Card"
 import Button from "@/components/Button"
 import Navbar from "@/components/Navbar"
 import Map from "@/components/Map"
+import RestaurantSlider from "@/components/RestaurantSlider"
+import FoodSlider from "@/components/FoodSlider";
 
 export default function CustomerPage() {
   const [restaurants, setRestaurants] = useState<any[]>([])
+  const [foodItems, setFoodItems] = useState<any[]>([])
+  const [selectedFood, setSelectedFood] = useState<any>(null)
+  const [restaurantsForFood, setRestaurantsForFood] = useState<any[]>([])
   const [menu, setMenu] = useState<any[]>([])
   const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [foodModalOpen, setFoodModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<any>(null)
   const [cart, setCart] = useState<Array<any>>([])
   const [cartOpen, setCartOpen] = useState(false)
@@ -96,17 +102,73 @@ export default function CustomerPage() {
         return
       }
       toast.success('Marked as received')
-      loadOrders()
+      await loadOrders()
     } catch (e) {
       console.error(e)
       toast.error('Network error')
     }
   }
 
+  const loadOrders = useCallback(async () => {
+    if (!user?.id) return
+    const res = await fetch(`/api/orders?customerId=${user.id}`)
+    const data = await res.json()
+    setOrders(data)
+  }, [user?.id])
+
   useEffect(() => {
     const u = localStorage.getItem("user")
     if (u) setUser(JSON.parse(u))
   }, [])
+
+  // WebSocket for live order status
+  useEffect(() => {
+    if (!user?.id) return
+    const url = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/api/orders/ws?userId=${user.id}&role=${user.role}`
+    let ws: WebSocket | null = null
+    let opened = false
+    try {
+      ws = new WebSocket(url)
+      const openTimer = setTimeout(() => {
+        if (!opened) {
+          console.warn('[customer] WS not opened, falling back to polling')
+          loadOrders()
+          const iv = setInterval(() => loadOrders(), 3000)
+          // store interval in ref via wsRef to clear on cleanup
+          // @ts-ignore
+          wsRef.current = { iv }
+        }
+      }, 2000)
+
+      ws.onopen = () => { opened = true; clearTimeout(openTimer); }
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data)
+        if (data.type === "order:assigned") {
+          toast.success("Your order is out for delivery!")
+          loadOrders()
+        }
+        if (data.type === "order:delivered") {
+          toast.success("Order delivered! Please provide feedback.")
+          setFeedbackOrder(data.orderId)
+          loadOrders()
+        }
+      }
+      wsRef.current = ws
+    } catch (err) {
+      console.warn('[customer] WS creation failed, starting polling', err)
+      loadOrders()
+      const iv = setInterval(() => loadOrders(), 3000)
+      // @ts-ignore
+      wsRef.current = { iv }
+    }
+    return () => {
+      try { if (ws && ws.readyState === 1) ws.close() } catch (e) {}
+      // clear polling interval if any
+      // @ts-ignore
+      if (wsRef.current?.iv) clearInterval(wsRef.current.iv)
+    }
+  }, [user?.id, loadOrders])
 
   useEffect(() => {
     fetch("/api/restaurants")
@@ -114,16 +176,15 @@ export default function CustomerPage() {
       .then(setRestaurants)
   }, [])
 
-  const loadOrders = async () => {
-    if (!user?.id) return
-    const res = await fetch(`/api/orders?customerId=${user.id}`)
-    const data = await res.json()
-    setOrders(data)
-  }
+  useEffect(() => {
+    fetch("/api/menu-items")
+      .then(res => res.json())
+      .then(setFoodItems)
+  }, [])
 
   useEffect(() => {
     if (user?.id) loadOrders()
-  }, [user])
+  }, [user?.id, loadOrders])
 
   const loadMenu = useCallback(async (restaurant: any) => {
     setSelectedRestaurant(restaurant)
@@ -132,6 +193,13 @@ export default function CustomerPage() {
     setMenu(data)
     setMenuOpen(true)
     toast.success(`Loaded menu for ${restaurant.name}`)
+  }, [])
+
+  const selectFood = useCallback((food: any) => {
+    setSelectedFood(food)
+    setRestaurantsForFood(food.restaurants)
+    setFoodModalOpen(true)
+    toast.success(`Available at ${food.restaurants.length} restaurant${food.restaurants.length !== 1 ? 's' : ''}`)
   }, [])
 
   const quickAdd = async (restaurant: any) => {
@@ -148,8 +216,18 @@ export default function CustomerPage() {
   // placeOrder can be used for immediate order or during checkout
   const placeOrder = async (item: any, restaurantParam?: any) => {
     const restaurant = restaurantParam || selectedRestaurant
-    if (!user?.id || !restaurant || !item) return null
+    if (!user?.id || !restaurant || !item || !item.id) {
+      toast.error("Missing required information to place order")
+      return null
+    }
     try {
+      console.log({
+          customerId: user.id,
+          restaurantId: restaurant.id,
+          menuItemId: item.id,
+          customerLat: user.lat,
+          customerLng: user.lng
+        })
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -235,10 +313,10 @@ export default function CustomerPage() {
   return (
     <div className="bg-[#fff8f6] min-h-screen font-sans">
       <Navbar user={user} />
-      <main className="max-w-5xl mx-auto px-4 py-8">
-        <h2 className="text-3xl font-extrabold mb-4 text-[#e23744] tracking-tight">Restaurants</h2>
+      <main className="w-full mx-auto px-4 py-2">
+        <h2 className="text-3xl font-extrabold my-4 text-[#e23744] tracking-tight">Find Restaurants Near You</h2>
         {/* Map showing restaurants and user */}
-        <div className="my-4">
+        <div className="my-2">
           <div className="
             rounded-2xl overflow-hidden
             border border-gray-200/60
@@ -252,48 +330,17 @@ export default function CustomerPage() {
             />
           </div>
         </div>
-        
-        <div className="grid grid-cols-3 items-center justify-center align-middle w-full gap-4">
-          {restaurants.map(r => (
-            <Card
-              key={r.id}
-              className="w-full p-0 overflow-hidden border border-gray-200/60 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-            >
-              {/* Top strip (visual identity, no data change) */}
-              <div className="h-24 bg-linear-to-br from-red-100 to-red-50 flex items-end p-3">
-                <div className="text-xs bg-white/90 px-2 py-0.5 rounded-full text-gray-600 shadow-sm">
-                  Nearby
-                </div>
-              </div>
-          
-              {/* Content */}
-              <div className="p-4 space-y-3">
-                <div className="flex items-start justify-between">
-                  <div className="font-semibold text-base text-gray-900 leading-tight">
-                    {r.name}
-                  </div>
-          
-                  {/* Static badge (no backend dependency) */}
-                  <div className="text-[11px] bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                    { (Math.random()*5).toFixed(1)}★
-                  </div>
-                </div>
-          
-                <div className="text-xs text-gray-500">
-                  Fast delivery • Popular
-                </div>
-          
-                <Button
-                  onClick={() => loadMenu(r)}
-                  className="w-full mt-2"
-                >
-                  View Menu
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
+        <h2 className="text-3xl font-extrabold my-6 text-[#e23744] tracking-tight"> Restaurants</h2>
+        <RestaurantSlider
+          restaurants={restaurants}
+          loadMenu={loadMenu}
+        />
 
+        <h2 className="text-3xl font-extrabold my-6 text-[#e23744] tracking-tight"> Explore Foods</h2>
+        <FoodSlider
+          foodItems={foodItems}
+          selectFood={selectFood}
+        />
         {/* Floating Cart Button */}
         <div className="fixed right-6 top-24 z-40">
           <button
@@ -319,6 +366,112 @@ export default function CustomerPage() {
             </span>
           </button>
         </div>
+
+        {/* Food modal (opened via selecting a food item) */}
+        {foodModalOpen && selectedFood && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl p-6 shadow-2xl max-w-2xl w-full border border-gray-100">
+              {/* Header */}
+              <div className="flex justify-between items-center mb-5">
+                <h3 className="text-xl font-semibold text-gray-900 tracking-tight">
+                  <span className="text-amber-600">{selectedFood.name}</span> — Available at
+                </h3>
+                <button
+                  onClick={() => setFoodModalOpen(false)}
+                  className="
+                    text-gray-400 hover:text-gray-700
+                    text-lg font-medium
+                    transition-colors
+                  "
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Content - List of Restaurants */}
+              <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+                {restaurantsForFood.length === 0 && <div className="text-gray-500">No restaurants available.</div>}
+                {restaurantsForFood.map((restaurant) => (
+                  <div
+                    key={restaurant.id}
+                    className="flex justify-between items-center py-3 border-b border-gray-100 last:border-none p-3 hover:bg-amber-50 rounded-lg transition"
+                  >
+                    {/* Left - Restaurant info */}
+                    <div className="flex items-center gap-3 flex-1">
+                      <div className="w-12 h-12 rounded-lg overflow-hidden">
+                        <img
+                          src={restaurant.image}
+                          alt={restaurant.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900 leading-tight">
+                          {restaurant.name}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          ₹{selectedFood.price}
+                        </div>
+                      </div>
+                    </div>
+                    {/* Right - Actions */}
+                    <div className="flex items-center gap-2">
+                      <Button
+                        onClick={() => {
+                          if (!restaurant.menuItemId) {
+                            toast.error("Menu item ID not available")
+                            return
+                          }
+                          // Create a temporary item object with the correct menu item ID
+                          const cartItem = { 
+                            id: restaurant.menuItemId, 
+                            name: selectedFood.name, 
+                            price: selectedFood.price 
+                          }
+                          addToCart(cartItem, restaurant)
+                          setFoodModalOpen(false)
+                        }}
+                        className="
+                          px-3 py-1.5 text-xs
+                          bg-amber-50 text-amber-600
+                          hover:bg-amber-100
+                          rounded-full
+                        "
+                      >
+                        Add
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          if (!restaurant.menuItemId) {
+                            toast.error("Menu item ID not available")
+                            return
+                          }
+                          // Create a temporary item object with the correct menu item ID
+                          const cartItem = { 
+                            id: restaurant.menuItemId, 
+                            name: selectedFood.name, 
+                            price: selectedFood.price 
+                          }
+                          placeOrder(cartItem, restaurant)
+                          setFoodModalOpen(false)
+                        }}
+                        className="
+                          px-4 py-1.5 text-xs
+                          bg-amber-500 text-white
+                          hover:bg-amber-600
+                          rounded-full
+                          shadow-sm
+                        "
+                      >
+                        Order
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Menu modal (opened via View Menu) */}
         {menuOpen && selectedRestaurant && (
