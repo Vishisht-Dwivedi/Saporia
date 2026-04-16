@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import Card from "../components/Card";
 
-// 🔹 Define types
+// Define types
 type Restaurant = {
   id: string;
   name: string;
@@ -31,7 +31,6 @@ export default function RestaurantSlider({ restaurants, loadMenu, userCoord }: P
 
   return (
     <div className="relative w-full">
-      
       {/* Left Arrow */}
       <button
         onClick={() => scroll("left")}
@@ -43,12 +42,12 @@ export default function RestaurantSlider({ restaurants, loadMenu, userCoord }: P
       {/* Slider */}
       <div
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar px-8 snap-x snap-mandatory"
+        className="flex gap-4 overflow-x-auto scroll-smooth no-scrollbar px-8 snap-x snap-mandatory"
       >
         {restaurants.map((r) => (
           <Card
             key={r.id}
-            className="bg-white/70 backdrop-blur-md snap-start min-w-65 max-w-65 shrink-0 overflow-hidden border border-white/40 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-80"
+            className="bg-white/70 backdrop-blur-md snap-start min-w-65 max-w-65 shrink-0 overflow-hidden border border-white/40 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-80"
           >
           <div className="relative w-full h-40 overflow-hidden">
               <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
@@ -83,7 +82,7 @@ export default function RestaurantSlider({ restaurants, loadMenu, userCoord }: P
                 </span>
 
                 <button
-                  className="text-xs px-3 py-1.5 rounded-full bg-red-500 text-white hover:bg-red-600 transition"
+                  className="text-xs px-3 py-1.5 rounded-sm bg-red-500 text-white hover:bg-red-600 transition"
                   onClick={() => loadMenu(r)}
                 >
                   View

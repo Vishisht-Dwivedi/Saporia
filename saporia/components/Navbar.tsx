@@ -10,9 +10,8 @@ interface NavbarProps {
 
 export default function Navbar({ user, onLogout }: NavbarProps) {
   return (
-    <nav className="sticky top-0 z-[9999] backdrop-blur-lg bg-white/70 border-b border-gray-200">
+    <nav className="sticky top-0 z-9999 backdrop-blur-xl bg-white/85 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-        
         {/* Logo */}
         <Link
           href="/"
@@ -25,10 +24,10 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
         <div className="flex items-center gap-4">
           
           {user && (
-            <div className="flex items-center gap-3 px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition cursor-pointer">
+            <div className="flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-gray-100 hover:bg-gray-200 transition cursor-pointer">
               
               {/* Avatar */}
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-400 to-pink-500 flex items-center justify-center text-white text-sm font-medium">
+              <div className="w-8 h-8 rounded-full bg-linear-to-br from-red-400 to-pink-500 flex items-center justify-center text-white text-sm font-medium">
                 {user.name?.charAt(0).toUpperCase()}
               </div>
 
@@ -42,7 +41,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
           {onLogout && (
             <button
               onClick={onLogout}
-              className="px-4 py-2 rounded-full bg-red-500 text-white text-sm font-medium shadow-sm hover:bg-red-600 hover:shadow-md active:scale-95 transition-all"
+              className="px-4 py-2 rounded-xl bg-red-500 text-white text-sm font-medium shadow-sm hover:bg-red-600 hover:shadow-md active:scale-95 transition-all"
             >
               Logout
             </button>

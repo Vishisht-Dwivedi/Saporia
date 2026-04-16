@@ -2,9 +2,9 @@ import bcrypt from "bcrypt";
 import { prisma } from "../lib/prisma";
 
 async function main() {
-  console.log("🌱 Seeding started...");
+  console.log("Seeding started...");
 
-  // 🧹 Clean DB
+  // Clean DB
   await prisma.feedback.deleteMany();
   await prisma.notification.deleteMany();
   await prisma.order.deleteMany();
@@ -12,10 +12,10 @@ async function main() {
   await prisma.restaurant.deleteMany();
   await prisma.user.deleteMany();
 
-  // 🔐 Password
+  // Password
   const password = await bcrypt.hash("1234", 10);
 
-  // 👤 Customer
+  // Customer
   await prisma.user.create({
     data: {
       name: "customer1",
@@ -26,7 +26,7 @@ async function main() {
     }
   });
 
-  // 📍 Restaurants
+  // Restaurants
   const restaurantInfos = [
     { name: "Sharma Vishnu Fast Food", lat: 23.2336, lng: 77.4340 },
     { name: "Manohar Dairy & Restaurant", lat: 23.2599, lng: 77.4126 },
@@ -166,7 +166,7 @@ async function main() {
     "Ranjit Lakeview": "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
     "Pin and Pan": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d"
   };
-  // 🏪 Create restaurants
+  // Create restaurants
   for (const info of restaurantInfos) {
     const user = await prisma.user.create({
       data: {
@@ -190,7 +190,7 @@ async function main() {
     restaurantRecords.push(restaurant);
   }
 
-  // 🍽️ Menus
+  // Menus
   for (const r of restaurantRecords) {
     const types = restaurantMenuType[r.name] || ["indian"];
     let items: string[] = [];
@@ -208,7 +208,7 @@ async function main() {
   });
   }
 
-  // 🛵 Delivery agents
+  // Delivery agents
   await prisma.user.createMany({
     data: [
       { name: "agent1", password, role: "DELIVERY", lat: 23.27, lng: 77.43 },
@@ -216,7 +216,7 @@ async function main() {
     ] as any
   });
 
-  console.log("✅ Seeding finished.");
+  console.log("Seeding finished.");
 }
 
 main()
