@@ -98,6 +98,7 @@ export default function DeliveryPage() {
           {orders.map(o => (
             <Card key={o.id} className="bg-gray-100 p-4">
               <div className="mb-1"><b>Order:</b> {o.id}</div>
+              <div className="mb-1"><b>Item:</b> {o.menuItemName}</div>
               <div className="mb-1"><b>Restaurant:</b> {o.restaurantId}</div>
               <div className="mb-1"><b>Commision:</b> ₹{ parseFloat(o.deliveryFee) }</div>
               <Button onClick={() => acceptDelivery(o.id)} className="mt-2">Accept Delivery</Button>
