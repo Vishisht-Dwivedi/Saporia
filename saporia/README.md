@@ -5,10 +5,28 @@
 
 ---
 
-
 # Saporia — Food Delivery App
 
 A full-stack food delivery web application built with **Next.js 16**, **Prisma ORM**, **PostgreSQL**, and **WebSockets** for real-time order tracking.
+
+---
+
+## Website Screenshots
+
+<table>
+  <tr>
+    <th>Map View</th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/d9a98415-a9e1-4253-8ba8-ad4634446bb9" width="400"/></td>
+  </tr>
+  <tr>
+    <th>Restaurant View</th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/d5a78de2-7e86-4aec-b951-e3f06387eb70" width="400"/></td>
+  </tr>
+</table>
 
 ---
 
