@@ -1,9 +1,6 @@
 ## Author
 
-**Vishisht Dwivedi , 24U020141 , CSE-2**
-
-<br>
-
+**Vishisht Dwivedi , 24U020141 , CSE-2** <br>
 **Aditya Chaurasia , 24U020143 , CSE-2** 
 
 ---
