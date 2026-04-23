@@ -105,11 +105,6 @@ The app requires **two terminals** running simultaneously.
 npm run dev
 ```
 
-**Terminal 2 — WebSocket server:**
-```bash
-npm run ws-server
-```
-
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
